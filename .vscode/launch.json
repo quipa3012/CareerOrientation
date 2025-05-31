@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-CareerOrientationApplication<career-orientation>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.qui.career_orientation.CareerOrientationApplication",
+            "projectName": "career-orientation",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
