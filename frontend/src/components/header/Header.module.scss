@@ -1,0 +1,27 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    padding: 0 24px;
+
+    .menu {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #000000;
+        }
+
+        .user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    }
+}

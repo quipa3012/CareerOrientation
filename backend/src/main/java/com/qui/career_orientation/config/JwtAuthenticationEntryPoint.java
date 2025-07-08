@@ -20,7 +20,17 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException authException) throws IOException, ServletException {
-        ErrorCode errorCode = ErrorCode.UNAUTHORIZED;
+        ErrorCode errorCode;
+        String exception = (String) request.getAttribute("exception");
+
+        if ("token_expired".equals(exception)) {
+            errorCode = ErrorCode.JWT_EXPIRED;
+        } else if ("token_invalid".equals(exception)) {
+            errorCode = ErrorCode.JWT_INVALID;
+        } else {
+            errorCode = ErrorCode.UNAUTHENTICATED;
+        }
+
         response.setStatus(errorCode.getStatusCode().value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 

@@ -6,37 +6,44 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final JwtDecoder jwtDecoder;
+    private final CorsConfigurationSource corsConfigurationSource;
+    private final CustomJwtDecoder customJwtDecoder;
     private final JwtAuthenticationConverter jwtAuthenticationConverter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-    SecurityConfig(JwtDecoder jwtDecoder, JwtAuthenticationConverter jwtAuthenticationConverter,
-            JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
-        this.jwtDecoder = jwtDecoder;
+    SecurityConfig(JwtAuthenticationConverter jwtAuthenticationConverter,
+            JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, CustomJwtDecoder customJwtDecoder,
+            CorsConfigurationSource corsConfigurationSource) {
         this.jwtAuthenticationConverter = jwtAuthenticationConverter;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
+        this.customJwtDecoder = customJwtDecoder;
+        this.corsConfigurationSource = corsConfigurationSource;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .csrf(csrf -> csrf.disable())
+                .headers(headers -> headers.frameOptions(
+                        frameOptions -> frameOptions.disable()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
                         // .requestMatchers(HttpMethod.GET,
                         // "/api/users").hasAnyRole(RoleConstant.ADMIN.name())
-                        .anyRequest().permitAll())
+                        .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.decoder(jwtDecoder)
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.decoder(
+                        customJwtDecoder)
                         .jwtAuthenticationConverter(jwtAuthenticationConverter))
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint));
 

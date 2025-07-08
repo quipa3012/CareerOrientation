@@ -16,6 +16,10 @@ public enum ErrorCode {
     INVALID_INPUT(1001, "Invalid input provided", HttpStatus.BAD_REQUEST),
     USER_NOT_FOUND(1002, "User not found", HttpStatus.NOT_FOUND),
     UNAUTHORIZED(1003, "Unauthorized access", HttpStatus.FORBIDDEN),
+    COOKIE_NOT_FOUND(1004, "Cookie not found", HttpStatus.BAD_REQUEST),
+    JWT_INVALID(1005, "JWT is invalid", HttpStatus.UNAUTHORIZED),
+    JWT_EXPIRED(1006, "JWT has expired", HttpStatus.UNAUTHORIZED),
+    PASSWORD_INVALID(1007, "Password is invalid", HttpStatus.NOT_FOUND),
 
     CAN_NOT_SIGN_JWT(1004, "Cannot sign JWT", HttpStatus.INTERNAL_SERVER_ERROR),
 
