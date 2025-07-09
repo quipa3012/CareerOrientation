@@ -14,4 +14,5 @@ public class UserResponse {
     String fullName;
     String email;
     String roleName;
+    String profileImageUrl;
 }

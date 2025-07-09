@@ -18,7 +18,6 @@ const Login: React.FC = () => {
 
     const handleLogin = async (values: LoginPayload) => {
         try {
-            console.log('Form Values:', values);
 
             const resultAction = await dispatch(login(values))
 
@@ -30,7 +29,6 @@ const Login: React.FC = () => {
                 message.error(errMsg)
             }
         } catch (error) {
-            console.error("Login error:", error)
             message.error("Đã có lỗi xảy ra, vui lòng thử lại!")
         }
     };

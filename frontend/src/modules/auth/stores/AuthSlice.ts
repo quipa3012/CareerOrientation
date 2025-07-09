@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { AuthState, LoginPayload, LoginResponse, LogoutPayload } from "../interfaces/AuthInterface";
-import { authService } from '../services/AuthService';
+import { AuthService } from "../services/AuthService";
+import { fetchCurrentUser, clearCurrentUser } from "../../user/stores/UserSlice";
 
 const initialState: AuthState = {
     accessToken: null,
@@ -12,10 +13,15 @@ const initialState: AuthState = {
 
 export const login = createAsyncThunk<LoginResponse, LoginPayload>(
     "auth/login",
-    async (payload, { rejectWithValue }) => {
+    async (payload, { rejectWithValue, dispatch }) => {
         try {
-            const data = await authService.login(payload);
-            return data;
+            // 🛡 Gọi API login lấy accessToken
+            const data = await AuthService.login(payload);
+
+            // 🆕 Gọi fetchCurrentUser để lấy thông tin user và lưu vào UserSlice
+            await dispatch(fetchCurrentUser());
+
+            return data; // chỉ trả về token + role
         } catch (error: any) {
             if (error.response?.data?.message) {
                 return rejectWithValue(error.response.data.message);
@@ -27,9 +33,11 @@ export const login = createAsyncThunk<LoginResponse, LoginPayload>(
 
 export const logout = createAsyncThunk<void, LogoutPayload>(
     "auth/logout",
-    async (token, { rejectWithValue }) => {
+    async (token, { rejectWithValue, dispatch }) => {
         try {
-            await authService.logout(token);
+            await AuthService.logout(token);
+
+            dispatch(clearCurrentUser());
         } catch (error: any) {
             if (error.response?.data?.message) {
                 return rejectWithValue(error.response.data.message);
@@ -38,7 +46,6 @@ export const logout = createAsyncThunk<void, LogoutPayload>(
         }
     }
 );
-
 
 const authSlice = createSlice({
     name: "auth",

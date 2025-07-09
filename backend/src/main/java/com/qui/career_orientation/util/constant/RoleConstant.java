@@ -5,5 +5,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public enum RoleConstant {
     ADMIN,
+    TEACHER,
     USER
 }

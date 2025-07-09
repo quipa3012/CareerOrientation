@@ -1,0 +1,15 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.card {
+    width: 500px;
+    border-radius: 12px;
+}
+
+.avatar {
+    border: 2px solid #1890ff;
+}

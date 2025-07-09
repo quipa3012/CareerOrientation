@@ -1,3 +1,4 @@
+
 export interface AuthState {
     accessToken: string | null;
     authenticated: boolean;

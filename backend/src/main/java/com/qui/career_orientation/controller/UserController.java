@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.qui.career_orientation.entity.dto.request.UserRequest;
 import com.qui.career_orientation.entity.dto.respond.ApiRespond;
@@ -23,30 +24,50 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping
-    public ResponseEntity<ApiRespond<UserResponse>> create(@RequestBody UserRequest request) {
-        UserResponse user = userService.create(request);
+    /**
+     * Create user with optional avatar file
+     */
+    @PostMapping(consumes = { "multipart/form-data" })
+    public ResponseEntity<ApiRespond<UserResponse>> create(
+            @ModelAttribute UserRequest request,
+            @RequestParam(value = "avatar", required = false) MultipartFile avatarFile) {
+        UserResponse user = userService.create(request, avatarFile);
         return ResponseEntity.ok(ApiRespond.success("Tạo người dùng thành công", user));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiRespond<UserResponse>> update(@PathVariable Long id, @RequestBody UserRequest request) {
-        UserResponse updatedUser = userService.update(id, request);
+    /**
+     * Update user with optional avatar file
+     */
+    @PutMapping(value = "/{id}", consumes = { "multipart/form-data" })
+    public ResponseEntity<ApiRespond<UserResponse>> update(
+            @PathVariable Long id,
+            @ModelAttribute UserRequest request,
+            @RequestParam(value = "avatar", required = false) MultipartFile avatarFile) {
+        UserResponse updatedUser = userService.update(id, request, avatarFile);
         return ResponseEntity.ok(ApiRespond.success("Cập nhật người dùng thành công", updatedUser));
     }
 
+    /**
+     * Delete user by ID
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiRespond<?>> delete(@PathVariable Long id) {
         userService.delete(id);
         return ResponseEntity.ok(ApiRespond.success("Xoá người dùng thành công", null));
     }
 
+    /**
+     * Get user by ID
+     */
     @GetMapping("/{id}")
     public ResponseEntity<ApiRespond<UserResponse>> getById(@PathVariable Long id) {
         UserResponse user = userService.getById(id);
         return ResponseEntity.ok(ApiRespond.success("Lấy thông tin người dùng thành công", user));
     }
 
+    /**
+     * Get all users (admin only)
+     */
     @GetMapping
     @PreAuthorize("hasAuthority('UPDATE_DATA')")
     public ResponseEntity<ApiRespond<List<UserResponse>>> getAll() {
@@ -65,6 +86,9 @@ public class UserController {
         return ResponseEntity.ok(ApiRespond.success("Lấy danh sách người dùng thành công", users));
     }
 
+    /**
+     * Get current logged-in user
+     */
     @GetMapping("/me")
     public ResponseEntity<ApiRespond<UserResponse>> getCurrentUser() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();

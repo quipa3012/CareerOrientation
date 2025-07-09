@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.qui.career_orientation.entity.*;
 import com.qui.career_orientation.entity.dto.request.UserRequest;
@@ -13,7 +14,7 @@ import com.qui.career_orientation.entity.mapper.UserMapper;
 import com.qui.career_orientation.exception.AppException;
 import com.qui.career_orientation.repository.RoleRepository;
 import com.qui.career_orientation.repository.UserRepository;
-import com.qui.career_orientation.service.RoleService;
+import com.qui.career_orientation.service.StorageService;
 import com.qui.career_orientation.service.UserService;
 import com.qui.career_orientation.util.constant.ErrorCode;
 import com.qui.career_orientation.util.constant.RoleConstant;
@@ -28,15 +29,19 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final RoleService roleService;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final StorageService storageService;
 
     @Override
-    public UserResponse create(UserRequest request) {
-        Role role = roleService.getByName(RoleConstant.USER.name());
-        if (role == null) {
-            throw new AppException(ErrorCode.ROLE_USER_DOES_NOT_EXIST);
+    public UserResponse create(UserRequest request, MultipartFile avatarFile) {
+        checkDuplicateUsernameAndEmail(request.getUsername(), request.getEmail());
+
+        Role role = getRoleOrThrow(RoleConstant.USER.name());
+
+        String profileImageUrl = null;
+        if (avatarFile != null && !avatarFile.isEmpty()) {
+            profileImageUrl = storageService.storeAvatarFile(request.getUsername(), avatarFile);
         }
 
         User user = User.builder()
@@ -45,6 +50,8 @@ public class UserServiceImpl implements UserService {
                 .fullName(request.getFullName())
                 .email(request.getEmail())
                 .role(role)
+                .profileImageUrl(profileImageUrl)
+                .passwordChanged(true)
                 .build();
 
         userRepository.save(user);
@@ -52,15 +59,33 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse update(Long id, UserRequest request) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+    public UserResponse update(Long id, UserRequest request, MultipartFile avatarFile) {
+        User user = getUserByIdOrThrow(id);
+
+        if (!user.getUsername().equals(request.getUsername())) {
+            checkDuplicateUsername(request.getUsername());
+        }
+        if (!user.getEmail().equals(request.getEmail())) {
+            checkDuplicateEmail(request.getEmail());
+        }
 
         user.setUsername(request.getUsername());
         user.setFullName(request.getFullName());
         user.setEmail(request.getEmail());
+
         if (request.getPassword() != null && !request.getPassword().isBlank()) {
             user.setPassword(passwordEncoder.encode(request.getPassword()));
+            user.setPasswordChanged(true);
+        }
+
+        // Xử lý avatar mới nếu có upload
+        if (avatarFile != null && !avatarFile.isEmpty()) {
+            // Xoá avatar cũ nếu có
+            if (user.getProfileImageUrl() != null) {
+                storageService.deleteAvatarFile(user.getProfileImageUrl());
+            }
+            String profileImageUrl = storageService.storeAvatarFile(user.getUsername(), avatarFile);
+            user.setProfileImageUrl(profileImageUrl);
         }
 
         userRepository.save(user);
@@ -69,14 +94,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(Long id) {
-        userRepository.deleteById(id);
+        User user = getUserByIdOrThrow(id);
+
+        // Xoá avatar file nếu có
+        if (user.getProfileImageUrl() != null) {
+            storageService.deleteAvatarFile(user.getProfileImageUrl());
+        }
+
+        userRepository.delete(user);
     }
 
     @Override
     public UserResponse getById(Long id) {
-        return userRepository.findById(id)
-                .map(UserMapper::toResponse)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        return UserMapper.toResponse(getUserByIdOrThrow(id));
     }
 
     @Override
@@ -93,43 +123,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void createAdminAccountIfNotExists() {
-        if (!userRepository.existsByUsername("admin")) {
-            Role adminRole = roleRepository.findById(RoleConstant.ADMIN.name())
-                    .orElseThrow(() -> new RuntimeException("Admin role not found"));
-
-            User admin = User.builder()
-                    .username("admin")
-                    .fullName("Administrator")
-                    .password(passwordEncoder.encode("admin"))
-                    .email("admin@gmail.com")
-                    .role(adminRole)
-                    .build();
-
-            userRepository.save(admin);
-            log.warn(
-                    "Admin account created with username 'admin' and password 'admin'. Please change it immediately after login.");
-        }
+        createDefaultAccountIfNotExists(
+                "admin",
+                "Administrator",
+                "admin@gmail.com",
+                "admin",
+                RoleConstant.ADMIN.name(),
+                "Admin account created with username 'admin' and password 'admin'. Please change it immediately after login.");
     }
 
     @Override
     public void createTestUserAccountIfNotExists() {
-        if (!userRepository.existsByUsername("user")) {
-            Role userRole = roleRepository.findById(RoleConstant.USER
-                    .name())
-                    .orElseThrow(() -> new RuntimeException("USER role not found"));
-
-            User admin = User.builder()
-                    .username("user")
-                    .fullName("Test User")
-                    .password(passwordEncoder.encode("user"))
-                    .email("test@gmail.com")
-                    .role(userRole)
-                    .build();
-
-            userRepository.save(admin);
-            log.warn(
-                    "Test User account created with username 'user' and password 'user'. Please change it immediately after login.");
-        }
+        createDefaultAccountIfNotExists(
+                "user",
+                "Test User",
+                "test@gmail.com",
+                "user",
+                RoleConstant.USER.name(),
+                "Test User account created with username 'user' and password 'user'. Please change it immediately after login.");
     }
 
     @Override
@@ -139,4 +150,55 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
     }
 
+    /** ----------- Private helper methods ----------- **/
+
+    private void checkDuplicateUsernameAndEmail(String username, String email) {
+        if (userRepository.existsByUsername(username)) {
+            throw new AppException(ErrorCode.USERNAME_ALREADY_EXISTS);
+        }
+        if (userRepository.existsByEmail(email)) {
+            throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS);
+        }
+    }
+
+    private void checkDuplicateUsername(String username) {
+        if (userRepository.existsByUsername(username)) {
+            throw new AppException(ErrorCode.USERNAME_ALREADY_EXISTS);
+        }
+    }
+
+    private void checkDuplicateEmail(String email) {
+        if (userRepository.existsByEmail(email)) {
+            throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS);
+        }
+    }
+
+    private Role getRoleOrThrow(String roleName) {
+        return roleRepository.findById(roleName)
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
+    }
+
+    private User getUserByIdOrThrow(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+    }
+
+    private void createDefaultAccountIfNotExists(String username, String fullName, String email, String rawPassword,
+            String roleName, String logMessage) {
+        if (!userRepository.existsByUsername(username)) {
+            Role role = getRoleOrThrow(roleName);
+
+            User user = User.builder()
+                    .username(username)
+                    .fullName(fullName)
+                    .password(passwordEncoder.encode(rawPassword))
+                    .email(email)
+                    .role(role)
+                    .passwordChanged(true)
+                    .build();
+
+            userRepository.save(user);
+            log.warn(logMessage);
+        }
+    }
 }

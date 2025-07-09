@@ -1,7 +1,7 @@
 import axiosClient from '../../../axios/AxiosClient';
 import type { LoginPayload, LoginResponse, RefreshRespondse, LogoutPayload } from "../interfaces/AuthInterface";
 
-export const authService = {
+export const AuthService = {
     login: (payload: LoginPayload): Promise<LoginResponse> => {
         return axiosClient.post("/auth/login", payload).then((res) => res.data.data);
     },

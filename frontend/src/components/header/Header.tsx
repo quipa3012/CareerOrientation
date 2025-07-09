@@ -26,7 +26,6 @@ const Header: React.FC = () => {
             message.success("Đã đăng xuất");
             navigate("/auth/login");
         } catch (err) {
-            console.error("Logout error:", err);
             message.error("Đăng xuất thất bại");
         }
     };
@@ -37,7 +36,7 @@ const Header: React.FC = () => {
                 {
                     key: "profile",
                     icon: <UserOutlined />,
-                    label: <Link to="/user/me">Thông Tin Tài Khoản</Link>,
+                    label: <Link to="/user/me">Tài Khoản</Link>,
                 },
                 {
                     key: "logout",
@@ -54,7 +53,7 @@ const Header: React.FC = () => {
                 {
                     key: "register",
                     icon: <UserOutlined />,
-                    label: <Link to="/auth/register">Đăng ký</Link>,
+                    label: <Link to="/user/register">Đăng ký</Link>,
                 },
             ],
     };

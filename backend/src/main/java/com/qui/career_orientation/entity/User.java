@@ -30,6 +30,12 @@ public class User {
     @Column(nullable = false)
     String password;
 
+    @Column(nullable = false)
+    boolean passwordChanged;
+
+    @Column(name = "profile_image_url")
+    String profileImageUrl;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_name")
     Role role;

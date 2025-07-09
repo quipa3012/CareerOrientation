@@ -1,6 +1,6 @@
 import axiosClient from "./AxiosClient";
 import { setAuth, clearAuth } from "../modules/auth/stores/AuthSlice";
-import { authService } from "../modules/auth/services/AuthService";
+import { AuthService } from "../modules/auth/services/AuthService";
 import type { Store } from "@reduxjs/toolkit";
 
 let isRefreshing = false;
@@ -20,11 +20,13 @@ const processQueue = (error: any, token: string | null = null) => {
 export const setupInterceptors = (store: Store) => {
     axiosClient.interceptors.request.use(
         (config) => {
-            // ✅ Luôn đính kèm accessToken nếu có
             const token = store.getState().auth.accessToken;
-            if (token) {
+
+            // 🛡 Không gắn Authorization cho API refresh-token
+            if (token && !config.url?.includes("/auth/refresh-token")) {
                 config.headers.Authorization = `Bearer ${token}`;
             }
+
             return config;
         },
         (error) => Promise.reject(error)
@@ -35,12 +37,20 @@ export const setupInterceptors = (store: Store) => {
         async (error) => {
             const originalRequest = error.config;
 
+            // 🚫 Nếu API refresh-token cũng trả 401 thì logout luôn
+            if (originalRequest.url.includes("/auth/refresh-token")) {
+                store.dispatch(clearAuth());
+                if (window.location.pathname !== "/") {
+                    window.location.replace("/");
+                }
+                return Promise.reject(error);
+            }
+
             // ✅ Chỉ xử lý nếu nhận về 401 và chưa retry
             if (
                 error.response?.status === 401 &&
                 !originalRequest._retry
             ) {
-                // 🔥 Check nếu đang refresh thì xếp hàng đợi
                 if (isRefreshing) {
                     return new Promise((resolve, reject) => {
                         failedQueue.push({ resolve, reject });
@@ -52,19 +62,15 @@ export const setupInterceptors = (store: Store) => {
                         .catch((err) => Promise.reject(err));
                 }
 
-                // ✅ Đánh dấu request đã retry
                 originalRequest._retry = true;
                 isRefreshing = true;
 
                 try {
-                    // 🔥 Gọi API refresh token nếu có cookie
-                    const { accesstoken: newAccessToken, role: role } = await authService.refresh();
+                    const { accesstoken: newAccessToken, role } = await AuthService.refresh();
                     console.log("✅ Refresh token thành công");
 
-                    // ✅ Set token mới vào Redux
-                    store.dispatch(setAuth({ accessToken: newAccessToken, authenticated: true, role: role }));
+                    store.dispatch(setAuth({ accessToken: newAccessToken, authenticated: true, role }));
 
-                    // ✅ Retry lại request ban đầu
                     originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
                     processQueue(null, newAccessToken);
 
@@ -74,7 +80,7 @@ export const setupInterceptors = (store: Store) => {
                     processQueue(err, null);
                     store.dispatch(clearAuth());
                     if (window.location.pathname !== "/") {
-                        window.location.replace("/"); // Chuyển về trang chủ
+                        window.location.replace("/");
                     }
                     return Promise.reject(err);
                 } finally {
@@ -86,3 +92,4 @@ export const setupInterceptors = (store: Store) => {
         }
     );
 };
+
