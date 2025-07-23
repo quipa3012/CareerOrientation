@@ -4,6 +4,8 @@ import {
     UserOutlined,
     LogoutOutlined,
     LoginOutlined,
+    DashboardOutlined,
+    HomeOutlined
 } from "@ant-design/icons";
 import styles from "./Header.module.scss";
 import { Link, useNavigate } from "react-router-dom";
@@ -17,8 +19,7 @@ const Header: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
 
-    const { authenticated } = useSelector((state: any) => state.auth);
-    const accessToken = useSelector((state: any) => state.auth.accessToken);
+    const { authenticated, role, accessToken } = useSelector((state: any) => state.auth);
 
     const handleLogout = async () => {
         try {
@@ -67,9 +68,34 @@ const Header: React.FC = () => {
                 </Link>
             ),
         },
-        { key: "home", label: <Link to="/">Trang Chủ</Link> },
-        { key: "about", label: <Link to="/about">Giới Thiệu</Link> },
-        { key: "contact", label: <Link to="/contact">Liên Hệ</Link> },
+        role === "ADMIN" && authenticated && {
+            key: "admin",
+            icon: <DashboardOutlined />,
+            label:
+                <Link to="/admin">Trang Quản Trị</Link>
+
+        },
+        {
+            key: "home",
+            icon: <HomeOutlined />,
+            label: <Link to="/">Trang Chủ</Link>
+        },
+        {
+            key: "about",
+            label: <Link to="/about">Giới Thiệu</Link>
+        },
+        {
+            key: "contact",
+            label: <Link to="/contact">Liên Hệ</Link>
+        },
+        {
+            key: "test",
+            label: <Link to="/test/start">Gợi Ý Khối Học</Link>
+        },
+        {
+            key: "class",
+            label: <Link to="/">Lớp Học</Link>
+        },
         {
             key: "auth",
             label: (

@@ -8,6 +8,4 @@ public interface RoleService {
     Role getByName(String name);
 
     void deleteByName(String name);
-
-    void createDefaultRoles();
 }

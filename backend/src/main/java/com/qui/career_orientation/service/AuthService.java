@@ -19,4 +19,5 @@ public interface AuthService {
     void logout(LogoutRequest token, HttpServletResponse response);
 
     AuthRespond refresh(String refreshToken, HttpServletResponse response);
+
 }

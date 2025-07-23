@@ -11,20 +11,14 @@ public class ApiEndpointConfig {
     @Bean
     public PublicApi publicApi() {
         return new PublicApi(List.of(
-                "/api/users", // Create user
-                "/api/auth/**", // Auth APIs
-                "/api/public/**", // Public APIs
-                "/uploads/**", // Static files (avatars, etc.)
-                "/swagger-ui/**", // Swagger UI
-                "/v3/api-docs/**" // OpenAPI docs
-        ));
+                "/api/auth/**",
+                "/api/questions/**"));
     }
 
     @Bean
     public ProtectedApi protectedApi() {
         return new ProtectedApi(List.of(
-                "/api/users", // User management
-                "/api/admin/**"));
+                "/api/admin"));
     }
 
     public record PublicApi(List<String> endpoints) {

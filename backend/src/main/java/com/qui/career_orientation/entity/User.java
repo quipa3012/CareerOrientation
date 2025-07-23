@@ -1,5 +1,7 @@
 package com.qui.career_orientation.entity;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -12,6 +14,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Access(AccessType.FIELD)
 public class User {
 
     @Id
@@ -31,7 +34,7 @@ public class User {
     String password;
 
     @Column(nullable = false)
-    boolean passwordChanged;
+    Boolean passwordChanged;
 
     @Column(name = "profile_image_url")
     String profileImageUrl;
@@ -39,5 +42,8 @@ public class User {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_name")
     Role role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<ClassUser> classUsers;
 
 }

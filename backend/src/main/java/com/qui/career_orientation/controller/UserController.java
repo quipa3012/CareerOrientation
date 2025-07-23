@@ -3,7 +3,6 @@ package com.qui.career_orientation.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -69,19 +68,7 @@ public class UserController {
      * Get all users (admin only)
      */
     @GetMapping
-    @PreAuthorize("hasAuthority('UPDATE_DATA')")
     public ResponseEntity<ApiRespond<List<UserResponse>>> getAll() {
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        log.info("🧑 Username: {}", authentication.getName());
-
-        var authorities = authentication.getAuthorities()
-                .stream()
-                .map(auth -> auth.getAuthority())
-                .toList();
-
-        log.info("🔐 Authorities: {}", authorities);
-
         List<UserResponse> users = userService.getAll();
         return ResponseEntity.ok(ApiRespond.success("Lấy danh sách người dùng thành công", users));
     }

@@ -9,7 +9,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfigurationSource;
-
+import com.qui.career_orientation.config.ApiEndpointConfig.ProtectedApi;
 import com.qui.career_orientation.config.ApiEndpointConfig.PublicApi;
 
 @Configuration
@@ -17,6 +17,7 @@ import com.qui.career_orientation.config.ApiEndpointConfig.PublicApi;
 @EnableMethodSecurity
 public class SecurityConfig {
 
+        private final ProtectedApi protectedApi;
         private final CorsConfigurationSource corsConfigurationSource;
         private final CustomJwtDecoder customJwtDecoder;
         private final JwtAuthenticationConverter jwtAuthenticationConverter;
@@ -25,12 +26,14 @@ public class SecurityConfig {
 
         SecurityConfig(JwtAuthenticationConverter jwtAuthenticationConverter,
                         JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, CustomJwtDecoder customJwtDecoder,
-                        CorsConfigurationSource corsConfigurationSource, PublicApi publicApi) {
+                        CorsConfigurationSource corsConfigurationSource, PublicApi publicApi,
+                        ApiEndpointConfig.ProtectedApi protectedApi) {
                 this.jwtAuthenticationConverter = jwtAuthenticationConverter;
                 this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
                 this.customJwtDecoder = customJwtDecoder;
                 this.corsConfigurationSource = corsConfigurationSource;
                 this.publicApi = publicApi;
+                this.protectedApi = protectedApi;
         }
 
         @Bean
@@ -44,6 +47,9 @@ public class SecurityConfig {
                                                 .requestMatchers(publicApi.endpoints()
                                                                 .toArray(new String[0]))
                                                 .permitAll()
+                                                .requestMatchers(protectedApi.endpoints()
+                                                                .toArray(new String[0]))
+                                                .authenticated()
                                                 .anyRequest().authenticated())
                                 .sessionManagement(session -> session
                                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

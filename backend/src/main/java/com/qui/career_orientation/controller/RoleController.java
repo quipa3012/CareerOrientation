@@ -35,10 +35,4 @@ public class RoleController {
         roleService.deleteByName(name);
         return ResponseEntity.ok(ApiRespond.success("Deleted role: " + name, null));
     }
-
-    @PostMapping("/default")
-    public ResponseEntity<ApiRespond<?>> createDefaultRoles() {
-        roleService.createDefaultRoles();
-        return ResponseEntity.ok(ApiRespond.success("Default roles created: ADMIN, USER", null));
-    }
 }

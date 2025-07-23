@@ -79,6 +79,10 @@ public class AuthServiceImpl implements AuthService {
         var user = userService.getUserByUserName(request.getUsername())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
+        if (!Boolean.TRUE.equals(user.getPasswordChanged())) {
+            throw new AppException(ErrorCode.PASSWORD_NOT_CHANGED);
+        }
+
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
         if (!authenticated) {
             throw new AppException(ErrorCode.PASSWORD_INVALID);

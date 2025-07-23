@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
     public UserResponse create(UserRequest request, MultipartFile avatarFile) {
         checkDuplicateUsernameAndEmail(request.getUsername(), request.getEmail());
 
-        Role role = getRoleOrThrow(RoleConstant.USER.name());
+        Role role = getRoleOrThrow(RoleConstant.STUDENT.name());
 
         String profileImageUrl = null;
         if (avatarFile != null && !avatarFile.isEmpty()) {
@@ -93,6 +93,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserResponse changePassword(String username, String oldPassword, String newPassword) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        boolean authenticated = passwordEncoder.matches(oldPassword, user.getPassword());
+        if (!authenticated) {
+            throw new AppException(ErrorCode.PASSWORD_INVALID);
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+
+        user.setPasswordChanged(true);
+
+        userRepository.save(user);
+
+        return UserMapper.toResponse(user);
+    }
+
+    @Override
     public void delete(Long id) {
         User user = getUserByIdOrThrow(id);
 
@@ -119,28 +138,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> getUserByUserName(String username) {
         return userRepository.findByUsername(username);
-    }
-
-    @Override
-    public void createAdminAccountIfNotExists() {
-        createDefaultAccountIfNotExists(
-                "admin",
-                "Administrator",
-                "admin@gmail.com",
-                "admin",
-                RoleConstant.ADMIN.name(),
-                "Admin account created with username 'admin' and password 'admin'. Please change it immediately after login.");
-    }
-
-    @Override
-    public void createTestUserAccountIfNotExists() {
-        createDefaultAccountIfNotExists(
-                "user",
-                "Test User",
-                "test@gmail.com",
-                "user",
-                RoleConstant.USER.name(),
-                "Test User account created with username 'user' and password 'user'. Please change it immediately after login.");
     }
 
     @Override
@@ -183,22 +180,4 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
     }
 
-    private void createDefaultAccountIfNotExists(String username, String fullName, String email, String rawPassword,
-            String roleName, String logMessage) {
-        if (!userRepository.existsByUsername(username)) {
-            Role role = getRoleOrThrow(roleName);
-
-            User user = User.builder()
-                    .username(username)
-                    .fullName(fullName)
-                    .password(passwordEncoder.encode(rawPassword))
-                    .email(email)
-                    .role(role)
-                    .passwordChanged(true)
-                    .build();
-
-            userRepository.save(user);
-            log.warn(logMessage);
-        }
-    }
 }

@@ -5,6 +5,7 @@ import About from '../pages/about/About';
 import Contact from '../pages/contact/Contact';
 import NotFound from '../pages/notfound/NotFound';
 import RefreshTestPage from '../../../components/RefreshTestPage';
+import UnauthorizedPage from '../pages/unauthorized/UnauthorizedPage';
 
 
 const MainRoutes = (
@@ -13,6 +14,7 @@ const MainRoutes = (
         <Route path="about" element={<About />} />
         <Route path="contact" element={<Contact />} />
         <Route path="refresh-test" element={<RefreshTestPage />} />
+        <Route path="/unauthorized" element={<UnauthorizedPage />} />
         {/* Các route khác */}
         <Route path="*" element={<NotFound />} />
     </Route>

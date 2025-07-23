@@ -1,0 +1,26 @@
+.container {
+    padding: 24px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.title {
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.details summary {
+    cursor: pointer;
+    color: #1677ff;
+    margin-bottom: 4px;
+}
+
+.details pre {
+    background-color: #f5f5f5;
+    padding: 8px;
+    border-radius: 4px;
+    max-height: 300px;
+    overflow: auto;
+    font-size: 12px;
+}

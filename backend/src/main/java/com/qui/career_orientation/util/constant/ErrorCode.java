@@ -31,6 +31,13 @@ public enum ErrorCode {
     PERMISSION_ALREADY_EXIST(1013, "Quyền đã tồn tại", HttpStatus.CONFLICT),
     INVALID_FILE_NAME(1014, "Tên tệp không hợp lệ", HttpStatus.BAD_REQUEST),
     INVALID_FILE_TYPE(1015, "Loại tệp không hợp lệ", HttpStatus.BAD_REQUEST),
+    PASSWORD_NOT_CHANGED(1020, "Mật khẩu mặc định chưa được thay đổi", HttpStatus.BAD_REQUEST),
+    CLAZZ_ALREADY_EXISTS(1021, "Lớp học đã tồn tại", HttpStatus.CONFLICT),
+    CLAZZ_NOT_FOUND(1022, "Không tìm thấy lớp học", HttpStatus.NOT_FOUND),
+    USER_ALREADY_IN_CLAZZ(1023, "Thành viên đã tồn tại trong lớp", HttpStatus.CONFLICT),
+    USER_NOT_IN_CLAZZ(1024, "Thành viên không có trong lớp", HttpStatus.NOT_FOUND),
+    BLOCK_NOT_FOUND(1025, "Không tìm thấy khối học", HttpStatus.NOT_FOUND),
+    MAJOR_NOT_FOUND(1026, "Không tìm thấy ngành học", HttpStatus.NOT_FOUND),
     UNCATEGORIZED_EXCEPTION(1111, "Lỗi chưa được phân loại", HttpStatus.INTERNAL_SERVER_ERROR);
 
     final int code;

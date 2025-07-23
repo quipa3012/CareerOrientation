@@ -1,0 +1,50 @@
+.chartContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #fffbe6, #f9f0ff);
+}
+
+.card {
+    padding: 2rem;
+    max-width: 60%;
+    text-align: center;
+    margin: 0 auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #52c41a;
+    margin-bottom: 1rem;
+}
+
+.resultText {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+
+.list {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+
+    li {
+        font-size: 1.1rem;
+        margin: 0.5rem 0;
+    }
+}
+
+.retakeButton {
+    margin-top: 2rem;
+    font-size: 1.2rem;
+    height: 50px;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-around;
+}

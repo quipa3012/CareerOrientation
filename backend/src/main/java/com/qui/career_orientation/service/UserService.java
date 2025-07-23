@@ -22,9 +22,8 @@ public interface UserService {
 
     Optional<User> getUserByUserName(String username);
 
-    void createAdminAccountIfNotExists();
-
-    void createTestUserAccountIfNotExists();
-
     UserResponse getByUsername(String username);
+
+    UserResponse changePassword(String userName, String oldPasswork, String newPassword);
+
 }
