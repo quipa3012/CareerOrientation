@@ -24,17 +24,15 @@ public class JwtAuthenticationConverterConfig {
     }
 
     private Collection<GrantedAuthority> extractAuthorities(Jwt jwt) {
-        // 1. Lấy authorities từ claim "scope" (nếu có)
         JwtGrantedAuthoritiesConverter defaultConverter = new JwtGrantedAuthoritiesConverter();
-        defaultConverter.setAuthorityPrefix("ROLE_"); // biến scope -> ROLE_ADMIN
-
+        defaultConverter.setAuthorityPrefix("ROLE_");
         Collection<GrantedAuthority> authorities = new ArrayList<>(defaultConverter.convert(jwt));
 
         // 2. Lấy thêm authorities từ claim "permissions"
         List<String> permissions = jwt.getClaimAsStringList("permissions");
         if (permissions != null) {
             List<GrantedAuthority> permissionAuthorities = permissions.stream()
-                    .map(SimpleGrantedAuthority::new) // giữ nguyên như "READ_USER"
+                    .map(SimpleGrantedAuthority::new)
                     .collect(Collectors.toList());
             authorities.addAll(permissionAuthorities);
         }

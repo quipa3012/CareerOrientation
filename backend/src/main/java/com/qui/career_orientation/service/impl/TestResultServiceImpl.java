@@ -36,7 +36,6 @@ public class TestResultServiceImpl implements TestResultService {
         try {
             Map<String, Integer> answers = request.getAnswers();
 
-            // Gửi JSON đến Flask
             ResponseEntity<Map> response = restTemplate.postForEntity(
                     AI_URL,
                     answers,
@@ -46,18 +45,15 @@ public class TestResultServiceImpl implements TestResultService {
                 throw new RuntimeException("AI API call failed: " + response.getStatusCode());
             }
 
-            // Lấy label từ Flask
             Map responseBody = response.getBody();
             if (responseBody == null || !responseBody.containsKey("prediction")) {
                 throw new RuntimeException("AI API response body is null or missing 'prediction' key");
             }
             Integer predictionLabel = (Integer) responseBody.get("prediction");
 
-            // Truy vấn DB để lấy Block
             Block predictedBlock = blockRepository.findByModelLabel(predictionLabel)
                     .orElseThrow(() -> new RuntimeException("Block not found for modelLabel: " + predictionLabel));
 
-            // Lưu DB
             TestResult result = TestResult.builder()
                     .userId(userId)
                     .answers(objectMapper.writeValueAsString(answers))

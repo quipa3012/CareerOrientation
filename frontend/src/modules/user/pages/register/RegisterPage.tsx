@@ -4,7 +4,7 @@ import { UploadOutlined, UserOutlined, LockOutlined, MailOutlined } from "@ant-d
 import type { RcFile } from "antd/es/upload";
 import styles from "./RegisterPage.module.scss";
 import { UserService } from "../../services/UserService";
-import { AuthService } from "../../../auth/services/AuthService"; // 🆕 thêm AuthService
+import { AuthService } from "../../../auth/services/AuthService"; 
 import type { UserRequest } from "../../interfaces/UserInterface";
 import { useNavigate } from "react-router-dom";
 
@@ -17,11 +17,9 @@ const RegisterPage: React.FC = () => {
     const handleSubmit = async (values: UserRequest) => {
         setLoading(true);
         try {
-            // 🟢 Đăng ký tài khoản
             const res = await UserService.createUser(values, avatarFile || undefined);
             message.success(`Tạo tài khoản thành công cho ${res.username}`);
 
-            // 🟢 Login ngay sau khi đăng ký
             await AuthService.login({
                 username: values.username,
                 password: values.password
@@ -44,7 +42,7 @@ const RegisterPage: React.FC = () => {
         } else {
             setAvatarFile(file);
         }
-        return false; // Không auto upload
+        return false;
     };
 
     return (

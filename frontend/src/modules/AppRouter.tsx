@@ -5,6 +5,7 @@ import AuthRoutes from './auth/router/AuthRoutes';
 import UserRoutes from './user/router/UserRoutes';
 import AdminRoutes from './admin/AdminRoutes';
 import TestRoutes from './test/router/TestRoutes';
+import MajorRoutes from './major/router/MajorRoutes';
 
 const AppRouter: React.FC = () => {
     return (
@@ -15,6 +16,7 @@ const AppRouter: React.FC = () => {
                 {UserRoutes}
                 {AdminRoutes}
                 {TestRoutes}
+                {MajorRoutes}
             </Routes>
         </BrowserRouter>
     );

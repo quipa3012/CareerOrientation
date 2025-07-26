@@ -93,6 +93,10 @@ const Header: React.FC = () => {
             label: <Link to="/test/start">Gợi Ý Khối Học</Link>
         },
         {
+            key: "major",
+            label: <Link to="/majors">Ngành Học</Link>
+        },
+        {
             key: "class",
             label: <Link to="/">Lớp Học</Link>
         },

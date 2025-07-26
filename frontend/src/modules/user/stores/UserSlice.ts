@@ -3,7 +3,7 @@ import type { UserInfo, UserRequest } from "../interfaces/UserInterface";
 import { UserService } from "../services/UserService";
 
 interface UserState {
-    currentUser: UserInfo | null; // 🆕 user đang login
+    currentUser: UserInfo | null;
     users: UserInfo[];
     loading: boolean;
     error: string | null;
@@ -11,15 +11,13 @@ interface UserState {
 
 
 const initialState: UserState = {
-    currentUser: null, // 🆕 user đang login
+    currentUser: null,
     users: [],
     loading: false,
     error: null
 };
 
-/**
- * Async thunks
- */
+
 
 export const fetchCurrentUser = createAsyncThunk(
     "users/fetchCurrentUser",
@@ -35,7 +33,7 @@ export const fetchCurrentUser = createAsyncThunk(
 
 
 export const fetchUsers = createAsyncThunk("users/fetchAll", async () => {
-    return await UserService.getAll(); // Cần viết API getAll ở userService
+    return await UserService.getAll();
 });
 
 export const createUser = createAsyncThunk(
@@ -55,14 +53,12 @@ export const updateUser = createAsyncThunk(
 export const deleteUser = createAsyncThunk(
     "users/delete",
     async (id: number) => {
-        await UserService.deleteUser(id); // Cần viết API delete ở userService
+        await UserService.deleteUser(id);
         return id;
     }
 );
 
-/**
- * Slice
- */
+
 const userSlice = createSlice({
     name: "users",
     initialState,
@@ -73,21 +69,19 @@ const userSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            // Fetch current user
             .addCase(fetchCurrentUser.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
             .addCase(fetchCurrentUser.fulfilled, (state, action) => {
                 state.loading = false;
-                state.currentUser = action.payload; // 🆕 lưu current user
+                state.currentUser = action.payload;
             })
             .addCase(fetchCurrentUser.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as string;
             })
 
-            // Fetch users
             .addCase(fetchUsers.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -101,18 +95,15 @@ const userSlice = createSlice({
                 state.error = action.error.message || "Failed to fetch users";
             })
 
-            // Create user
             .addCase(createUser.fulfilled, (state, action) => {
                 state.users.push(action.payload);
             })
-            // Update user
             .addCase(updateUser.fulfilled, (state, action) => {
                 const index = state.users.findIndex(u => u.id === action.payload.id);
                 if (index !== -1) {
                     state.users[index] = action.payload;
                 }
             })
-            // Delete user
             .addCase(deleteUser.fulfilled, (state, action) => {
                 state.users = state.users.filter(u => u.id !== action.payload);
             });

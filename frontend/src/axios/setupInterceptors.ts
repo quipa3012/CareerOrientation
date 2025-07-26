@@ -22,7 +22,6 @@ export const setupInterceptors = (store: Store) => {
         (config) => {
             const token = store.getState().auth.accessToken;
 
-            // 🛡 Không gắn Authorization cho API refresh-token
             if (token && !config.url?.includes("/auth/refresh-token")) {
                 config.headers.Authorization = `Bearer ${token}`;
             }
@@ -37,7 +36,6 @@ export const setupInterceptors = (store: Store) => {
         async (error) => {
             const originalRequest = error.config;
 
-            // 🚫 Nếu API refresh-token cũng trả 401 thì logout luôn
             if (originalRequest.url.includes("/auth/refresh-token")) {
                 store.dispatch(clearAuth());
                 if (window.location.pathname !== "/") {
@@ -46,7 +44,6 @@ export const setupInterceptors = (store: Store) => {
                 return Promise.reject(error);
             }
 
-            // ✅ Chỉ xử lý nếu nhận về 401 và chưa retry
             if (
                 error.response?.status === 401 &&
                 !originalRequest._retry
@@ -67,7 +64,6 @@ export const setupInterceptors = (store: Store) => {
 
                 try {
                     const { accesstoken: newAccessToken, role } = await AuthService.refresh();
-                    console.log("✅ Refresh token thành công");
 
                     store.dispatch(setAuth({ accessToken: newAccessToken, authenticated: true, role }));
 
@@ -76,7 +72,6 @@ export const setupInterceptors = (store: Store) => {
 
                     return axiosClient(originalRequest);
                 } catch (err) {
-                    console.warn("❌ Refresh token thất bại, redirect login");
                     processQueue(err, null);
                     store.dispatch(clearAuth());
                     if (window.location.pathname !== "/") {

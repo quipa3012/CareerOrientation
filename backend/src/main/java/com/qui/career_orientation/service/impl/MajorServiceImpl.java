@@ -2,6 +2,7 @@ package com.qui.career_orientation.service.impl;
 
 import java.util.List;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.qui.career_orientation.entity.Block;
@@ -26,7 +27,8 @@ public class MajorServiceImpl implements MajorService {
 
         @Override
         public List<MajorRespond> getAllMajors() {
-                return majorRepository.findAll().stream()
+                return majorRepository.findAll(Sort.by(
+                                "name")).stream()
                                 .map(MajorMapper::toMajorRespond)
                                 .toList();
         }

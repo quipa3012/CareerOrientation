@@ -30,7 +30,6 @@ const ResultPage: React.FC = () => {
             .reduce((sum, [, value]) => sum + value, 0)
     );
 
-    // ✅ Dữ liệu chart
     const chartData = {
         labels: ["Realistic", "Investigative", "Artistic", "Social", "Enterprising", "Conventional"],
         datasets: [

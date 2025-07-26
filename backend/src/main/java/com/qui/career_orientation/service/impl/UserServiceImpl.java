@@ -78,9 +78,7 @@ public class UserServiceImpl implements UserService {
             user.setPasswordChanged(true);
         }
 
-        // Xử lý avatar mới nếu có upload
         if (avatarFile != null && !avatarFile.isEmpty()) {
-            // Xoá avatar cũ nếu có
             if (user.getProfileImageUrl() != null) {
                 storageService.deleteAvatarFile(user.getProfileImageUrl());
             }
@@ -115,7 +113,6 @@ public class UserServiceImpl implements UserService {
     public void delete(Long id) {
         User user = getUserByIdOrThrow(id);
 
-        // Xoá avatar file nếu có
         if (user.getProfileImageUrl() != null) {
             storageService.deleteAvatarFile(user.getProfileImageUrl());
         }
@@ -146,8 +143,6 @@ public class UserServiceImpl implements UserService {
                 .map(UserMapper::toResponse)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
     }
-
-    /** ----------- Private helper methods ----------- **/
 
     private void checkDuplicateUsernameAndEmail(String username, String email) {
         if (userRepository.existsByUsername(username)) {

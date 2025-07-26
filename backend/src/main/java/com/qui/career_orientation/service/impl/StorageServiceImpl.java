@@ -19,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class StorageServiceImpl implements StorageService {
 
-    // Trả về thư mục relative (bên trong static)
     private final String AVATAR_UPLOAD_DIR = "src/main/resources/static/uploads/avatars/";
 
     @Override
@@ -46,11 +45,9 @@ public class StorageServiceImpl implements StorageService {
             Files.copy(file.getInputStream(), filePath);
             log.info("✅ Avatar saved to: {}", filePath.toAbsolutePath());
 
-            // Trả về relative path để frontend tự xử lý prefix
             return "/uploads/avatars/" + fileName;
 
         } catch (IOException e) {
-            log.error("❌ Failed to store avatar file", e);
             throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
         }
     }
@@ -65,9 +62,7 @@ public class StorageServiceImpl implements StorageService {
 
         try {
             Files.deleteIfExists(filePath);
-            log.info("✅ Deleted avatar file: {}", filePath.toAbsolutePath());
         } catch (IOException e) {
-            log.warn("⚠️ Failed to delete avatar file: {}", filePath.toAbsolutePath(), e);
         }
     }
 }

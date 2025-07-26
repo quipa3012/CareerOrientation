@@ -11,7 +11,6 @@ export const AuthService = {
             return res.data.data;
         } catch (error: any) {
             if (error.response?.status === 401 || error.response?.data?.message === "COOKIE_NOT_FOUND") {
-                console.warn("❌ Không có refresh-token hoặc token không hợp lệ");
                 throw new Error("NO_REFRESH_TOKEN");
             }
             throw error;

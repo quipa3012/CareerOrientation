@@ -12,7 +12,9 @@ public class ApiEndpointConfig {
     public PublicApi publicApi() {
         return new PublicApi(List.of(
                 "/api/auth/**",
-                "/api/questions/**"));
+                "/api/questions/**",
+                "api/majors/**",
+                "api/blocks/**"));
     }
 
     @Bean

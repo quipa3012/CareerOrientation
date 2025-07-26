@@ -15,13 +15,11 @@ export const login = createAsyncThunk<LoginResponse, LoginPayload>(
     "auth/login",
     async (payload, { rejectWithValue, dispatch }) => {
         try {
-            // 🛡 Gọi API login lấy accessToken
             const data = await AuthService.login(payload);
 
-            // 🆕 Gọi fetchCurrentUser để lấy thông tin user và lưu vào UserSlice
             await dispatch(fetchCurrentUser());
 
-            return data; // chỉ trả về token + role
+            return data; 
         } catch (error: any) {
             if (error.response?.data?.message) {
                 return rejectWithValue(error.response.data.message);

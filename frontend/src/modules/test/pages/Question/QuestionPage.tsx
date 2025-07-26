@@ -21,7 +21,6 @@ const QuestionPage: React.FC = () => {
 
     const groupKeys = ["R", "I", "A", "S", "E", "C", "TIPI", "Other"];
 
-    // Group các câu hỏi
     const groupedQuestions: Record<string, typeof questions> = groupKeys.reduce(
         (acc, key) => ({ ...acc, [key]: [] }),
         {}
@@ -31,18 +30,17 @@ const QuestionPage: React.FC = () => {
         groupedQuestions[prefix]?.push(q);
     });
 
-    // Tính phần trăm hoàn thành
     const totalQuestions = questions.length;
     const answeredCount = Object.keys(savedAnswers).length;
     const progressPercent = Math.round((answeredCount / totalQuestions) * 100);
 
-    const modalShownRef = useRef(false); // ✅ Flag không bị reset khi re-render
+    const modalShownRef = useRef(false); 
 
     useEffect(() => {
         dispatch(fetchQuestions()).then(() => {
             const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
             if (stored && !modalShownRef.current) {
-                modalShownRef.current = true; // ✅ Đánh dấu đã show modal
+                modalShownRef.current = true;
                 const parsed = JSON.parse(stored);
 
                 Modal.confirm({
@@ -68,7 +66,6 @@ const QuestionPage: React.FC = () => {
 
 
 
-    /** 💾 Auto save với debounce (500ms) */
     const debounceSave = useCallback(
         (() => {
             let timeout: ReturnType<typeof setTimeout>;
@@ -82,22 +79,19 @@ const QuestionPage: React.FC = () => {
         []
     );
 
-    /** 📝 Handle form value change */
     const handleValueChange = (
         changedValues: Record<string, number>,
     ) => {
-        const mergedValues = { ...savedAnswers, ...changedValues }; // giữ dữ liệu cũ
+        const mergedValues = { ...savedAnswers, ...changedValues }; 
         setSavedAnswers(mergedValues);
-        debounceSave(mergedValues); // save localStorage
+        debounceSave(mergedValues); 
     };
 
-    /** 🔄 Handle chuyển group */
     const handleGroupChange = (newGroup: string) => {
         setCurrentGroup(newGroup);
-        form.setFieldsValue(savedAnswers); // fill lại các câu đã trả lời
+        form.setFieldsValue(savedAnswers);
     };
 
-    /** 🚀 Submit form */
     const handleSubmit = async () => {
         if (!user) {
             message.error("Bạn cần đăng nhập trước khi làm bài test");
@@ -105,13 +99,12 @@ const QuestionPage: React.FC = () => {
         }
 
         try {
-            const currentValues = form.getFieldsValue(); // chỉ lấy các field hiện tại
-            const fullAnswers = { ...savedAnswers, ...currentValues }; // merge tất cả
+            const currentValues = form.getFieldsValue();
+            const fullAnswers = { ...savedAnswers, ...currentValues }; 
 
-            // Validate: check còn câu nào chưa trả lời không
             const unanswered = questions.filter((q) => !(q.code in fullAnswers));
             if (unanswered.length > 0) {
-                message.error(`⚠️ Bạn còn ${unanswered.length} câu chưa trả lời.`);
+                message.error(`Bạn còn ${unanswered.length} câu chưa trả lời.`);
                 return;
             }
 
@@ -130,7 +123,7 @@ const QuestionPage: React.FC = () => {
             setCurrentGroup(groupKeys[0]);
             navigate("/test/result");
         } catch (err) {
-            message.error("❌ Gửi bài test thất bại!");
+            message.error("Gửi bài test thất bại!");
         }
     };
 

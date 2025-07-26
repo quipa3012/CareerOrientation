@@ -2,25 +2,18 @@ import axiosClient from "../../../axios/AxiosClient";
 import type { UserInfo, UserRequest } from "../interfaces/UserInterface";
 
 export const UserService = {
-    /**
-     * Get current logged-in user profile
-     */
     getProfile: async (): Promise<UserInfo> => {
         const res = await axiosClient.get("/users/me");
         return res.data.data as UserInfo;
     },
 
-    /**
-     * Get all users
-     */
+
     getAll: async (): Promise<UserInfo[]> => {
         const res = await axiosClient.get("/users");
         return res.data.data as UserInfo[];
     },
 
-    /**
-     * Create a new user with optional avatar file
-     */
+
     createUser: async (
         user: UserRequest,
         avatarFile?: File
@@ -41,9 +34,7 @@ export const UserService = {
         return res.data.data as UserInfo;
     },
 
-    /**
-     * Update an existing user with optional avatar file
-     */
+
     updateUser: async (
         id: number,
         user: UserRequest,
@@ -65,9 +56,7 @@ export const UserService = {
         return res.data.data as UserInfo;
     },
 
-    /**
-     * Delete user by ID
-     */
+
     deleteUser: async (id: number): Promise<void> => {
         await axiosClient.delete(`/users/${id}`);
     }
