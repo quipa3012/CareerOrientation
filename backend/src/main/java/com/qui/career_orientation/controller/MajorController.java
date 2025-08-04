@@ -41,8 +41,7 @@ public class MajorController {
     }
 
     @PutMapping("/{id}")
-    public MajorRespond updateMajor(@PathVariable Long id, @RequestBody MajorRequest request,
-            @RequestParam Long blockId) {
+    public MajorRespond updateMajor(@PathVariable Long id, @RequestBody MajorRequest request) {
         return majorService.updateMajor(id, request);
     }
 

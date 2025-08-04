@@ -4,7 +4,7 @@ import { UploadOutlined, UserOutlined, LockOutlined, MailOutlined } from "@ant-d
 import type { RcFile } from "antd/es/upload";
 import styles from "./RegisterPage.module.scss";
 import { UserService } from "../../services/UserService";
-import { AuthService } from "../../../auth/services/AuthService"; 
+import { AuthService } from "../../../auth/services/AuthService";
 import type { UserRequest } from "../../interfaces/UserInterface";
 import { useNavigate } from "react-router-dom";
 
@@ -20,13 +20,7 @@ const RegisterPage: React.FC = () => {
             const res = await UserService.createUser(values, avatarFile || undefined);
             message.success(`Tạo tài khoản thành công cho ${res.username}`);
 
-            await AuthService.login({
-                username: values.username,
-                password: values.password
-            });
-
-            message.success(`Đăng nhập thành công với ${res.username}`);
-            navigate("/user/me");
+            navigate("/auth/login");
         } catch (err) {
             console.error(err);
             message.error("Tạo tài khoản hoặc đăng nhập thất bại");

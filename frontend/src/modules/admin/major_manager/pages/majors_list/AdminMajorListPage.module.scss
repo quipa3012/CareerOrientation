@@ -1,0 +1,13 @@
+.wrapper {
+    padding: 24px;
+    background-color: #fff;
+    min-height: 100%;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 16px;
+    gap: 16px;
+    flex-wrap: wrap;
+}

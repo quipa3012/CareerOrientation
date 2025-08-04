@@ -74,9 +74,9 @@ const AdminHeader: React.FC = () => {
             label: <Link to="/admin/users">Quản Lý Người Dùng</Link>,
         },
         {
-            key: "roles",
+            key: "majors",
             icon: <SettingOutlined />,
-            label: <Link to="/admin/roles">Quản Lý Vai Trò</Link>,
+            label: <Link to="/admin/majors">Quản Lý Ngành học</Link>,
         },
         {
             key: "auth",

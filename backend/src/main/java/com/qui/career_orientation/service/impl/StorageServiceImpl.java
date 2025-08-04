@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 public class StorageServiceImpl implements StorageService {
 
     private final String AVATAR_UPLOAD_DIR = "src/main/resources/static/uploads/avatars/";
+    private final String MAJOR_IMAGE_DIR = "src/main/resources/static/uploads/major_images/";
 
     @Override
     public String storeAvatarFile(String username, MultipartFile file) {
@@ -43,7 +44,6 @@ public class StorageServiceImpl implements StorageService {
             Path filePath = uploadPath.resolve(fileName);
 
             Files.copy(file.getInputStream(), filePath);
-            log.info("✅ Avatar saved to: {}", filePath.toAbsolutePath());
 
             return "/uploads/avatars/" + fileName;
 
@@ -63,6 +63,35 @@ public class StorageServiceImpl implements StorageService {
         try {
             Files.deleteIfExists(filePath);
         } catch (IOException e) {
+        }
+    }
+
+    public String storeMajorImage(MultipartFile file) {
+        try {
+            Path uploadPath = Paths.get(MAJOR_IMAGE_DIR);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            String originalFilename = file.getOriginalFilename();
+            if (originalFilename == null || !originalFilename.contains(".")) {
+                throw new AppException(ErrorCode.INVALID_FILE_NAME);
+            }
+
+            String extension = originalFilename.substring(originalFilename.lastIndexOf('.')).toLowerCase();
+            if (!List.of(".jpg", ".jpeg", ".png").contains(extension)) {
+                throw new AppException(ErrorCode.INVALID_FILE_TYPE);
+            }
+
+            String fileName = "major_" + System.currentTimeMillis() + extension;
+            Path filePath = uploadPath.resolve(fileName);
+
+            Files.copy(file.getInputStream(), filePath);
+
+            return "/uploads/major_images/" + fileName;
+
+        } catch (IOException e) {
+            throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
         }
     }
 }
