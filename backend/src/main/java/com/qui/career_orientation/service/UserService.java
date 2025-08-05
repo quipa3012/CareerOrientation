@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.qui.career_orientation.entity.User;
+import com.qui.career_orientation.entity.dto.request.ChangePasswordRequest;
 import com.qui.career_orientation.entity.dto.request.UserRequest;
 import com.qui.career_orientation.entity.dto.respond.UserResponse;
 
@@ -24,6 +25,6 @@ public interface UserService {
 
     UserResponse getByUsername(String username);
 
-    UserResponse changePassword(String userName, String oldPasswork, String newPassword);
+    UserResponse changePassword(String userName, ChangePasswordRequest request);
 
 }

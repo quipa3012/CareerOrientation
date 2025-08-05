@@ -170,7 +170,7 @@ public class DefaultDataServiceImpl implements DefaultDataService {
                 createDefaultAccountIfNotExists(
                                 "student",
                                 "Test Student",
-                                "test@gmail.com",
+                                "student@gmail.com",
                                 "student",
                                 RoleConstant.STUDENT.name(),
                                 "Test User account created with username 'user' and password 'user'. Please change it immediately after login.");

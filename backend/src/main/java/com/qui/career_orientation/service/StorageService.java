@@ -6,6 +6,4 @@ public interface StorageService {
     String storeAvatarFile(String username, MultipartFile file);
 
     void deleteAvatarFile(String profileImageUrl);
-
-    String storeMajorImage(MultipartFile file);
 }

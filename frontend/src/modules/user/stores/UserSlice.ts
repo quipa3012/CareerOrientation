@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import type { UserInfo, UserRequest } from "../interfaces/UserInterface";
+import type { UserInfo, UserRequest, ChangePasswordRequest } from "../interfaces/UserInterface";
 import { UserService } from "../services/UserService";
 
 interface UserState {
@@ -58,6 +58,22 @@ export const deleteUser = createAsyncThunk(
     }
 );
 
+export const changePassword = createAsyncThunk<
+    UserInfo,
+    ChangePasswordRequest,
+    { rejectValue: string }
+>(
+    "users/changePassword",
+    async (payload, { rejectWithValue }) => {
+        try {
+            const res = await UserService.changePassword(payload);
+            return res;
+        } catch (error: any) {
+            const msg = error?.response?.data?.message || error?.message || "Đổi mật khẩu không thành công";
+            return rejectWithValue(msg);
+        }
+    }
+);
 
 const userSlice = createSlice({
     name: "users",
@@ -106,6 +122,18 @@ const userSlice = createSlice({
             })
             .addCase(deleteUser.fulfilled, (state, action) => {
                 state.users = state.users.filter(u => u.id !== action.payload);
+            })
+            .addCase(changePassword.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(changePassword.fulfilled, (state, action) => {
+                state.loading = false;
+                state.currentUser = action.payload;
+            })
+            .addCase(changePassword.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as string || action.error.message || "Failed to change password";
             });
     }
 });

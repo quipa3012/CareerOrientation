@@ -24,3 +24,8 @@ export interface UserResponse {
     profileImageUrl: string | null;
     passwordChanged: boolean;
 }
+
+export interface ChangePasswordRequest {
+    oldPassword: string;
+    newPassword: string;
+}

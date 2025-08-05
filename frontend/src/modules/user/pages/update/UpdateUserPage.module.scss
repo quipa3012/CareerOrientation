@@ -1,0 +1,51 @@
+.updateWrapper {
+    display: flex;
+    justify-content: center;
+    padding: 24px;
+}
+
+.updateCard {
+    width: 900px;
+    max-width: 95%;
+    border-radius: 8px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.avatarContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 12px;
+}
+
+.avatarPreview {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #e8e8e8;
+    margin-bottom: 8px;
+}
+
+.avatarActions {
+    display: flex;
+    gap: 8px;
+}
+
+.noAvatar {
+    width: 160px;
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed #d9d9d9;
+    color: #999;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.hint {
+    color: #8c8c8c;
+    font-size: 12px;
+    margin-top: 6px;
+}

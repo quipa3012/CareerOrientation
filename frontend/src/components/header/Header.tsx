@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Layout, Menu, Avatar, Dropdown, message } from "antd";
 import {
     UserOutlined,
@@ -11,13 +11,22 @@ import styles from "./Header.module.scss";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../modules/auth/stores/AuthSlice";
-import type { AppDispatch } from "../../store/store";
+import type { AppDispatch, RootState } from "../../store/store";
 
 const { Header: AntHeader } = Layout;
 
 const Header: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
+    const currentUser = useSelector((state: RootState) => state.user.currentUser);
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
+
+    const avatarSrc = useMemo(() => {
+        const url = currentUser?.profileImageUrl;
+        if (!url) return undefined;
+        return url.startsWith("http") ? url : `${backendUrl}${url}`;
+    }, [currentUser?.profileImageUrl, backendUrl]);
+
 
     const { authenticated, role, accessToken } = useSelector((state: any) => state.auth);
 
@@ -105,7 +114,14 @@ const Header: React.FC = () => {
             label: (
                 <div className={styles.user}>
                     <Dropdown menu={userMenu} placement="bottomRight" arrow>
-                        <Avatar size="large" icon={<UserOutlined />} />
+                        <Avatar
+                            size="large"
+                            src={avatarSrc}
+                            alt={currentUser?.fullName || currentUser?.username || ""}
+                        >
+                            {!avatarSrc && <UserOutlined />}
+                        </Avatar>
+
                     </Dropdown>
                 </div>
             ),
@@ -126,3 +142,4 @@ const Header: React.FC = () => {
 };
 
 export default Header;
+

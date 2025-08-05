@@ -1,4 +1,3 @@
-// 📁 src/shared/components/Editor.tsx
 import { Editor as TinyMCEEditor } from "@tinymce/tinymce-react";
 import { useRef } from "react";
 

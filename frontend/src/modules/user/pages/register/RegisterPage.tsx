@@ -4,7 +4,6 @@ import { UploadOutlined, UserOutlined, LockOutlined, MailOutlined } from "@ant-d
 import type { RcFile } from "antd/es/upload";
 import styles from "./RegisterPage.module.scss";
 import { UserService } from "../../services/UserService";
-import { AuthService } from "../../../auth/services/AuthService";
 import type { UserRequest } from "../../interfaces/UserInterface";
 import { useNavigate } from "react-router-dom";
 
@@ -19,15 +18,16 @@ const RegisterPage: React.FC = () => {
         try {
             const res = await UserService.createUser(values, avatarFile || undefined);
             message.success(`Tạo tài khoản thành công cho ${res.username}`);
-
             navigate("/auth/login");
-        } catch (err) {
+        } catch (err: any) {
             console.error(err);
-            message.error("Tạo tài khoản hoặc đăng nhập thất bại");
+            const backendMessage = err?.response?.data?.message || "Tạo tài khoản thất bại";
+            message.error(backendMessage);
         } finally {
             setLoading(false);
         }
     };
+
 
     const beforeUpload = (file: RcFile) => {
         const isImage = file.type.startsWith("image/");

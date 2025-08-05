@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.qui.career_orientation.entity.*;
+import com.qui.career_orientation.entity.dto.request.ChangePasswordRequest;
 import com.qui.career_orientation.entity.dto.request.UserRequest;
 import com.qui.career_orientation.entity.dto.respond.UserResponse;
 import com.qui.career_orientation.entity.mapper.UserMapper;
@@ -91,19 +92,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse changePassword(String username, String oldPassword, String newPassword) {
+    public UserResponse changePassword(String username, ChangePasswordRequest request) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        boolean authenticated = passwordEncoder.matches(oldPassword, user.getPassword());
-        if (!authenticated) {
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
             throw new AppException(ErrorCode.PASSWORD_INVALID);
         }
 
-        user.setPassword(passwordEncoder.encode(newPassword));
-
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         user.setPasswordChanged(true);
-
         userRepository.save(user);
 
         return UserMapper.toResponse(user);

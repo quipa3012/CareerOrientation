@@ -50,6 +50,7 @@ public class SecurityConfig {
                                                 .requestMatchers(protectedApi.endpoints()
                                                                 .toArray(new String[0]))
                                                 .authenticated()
+                                                .requestMatchers("/uploads/**").permitAll()
                                                 .anyRequest().authenticated())
                                 .sessionManagement(session -> session
                                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -6,10 +6,17 @@
 }
 
 .card {
-    width: 500px;
+    width: 40%;
     border-radius: 12px;
 }
 
 .avatar {
-    border: 2px solid #1890ff;
+    margin-top: 10px;
+    margin-left: 12px;
+}
+
+.actions {
+    margin-top: 16px;
+    display: flex;
+    justify-content: space-around;
 }

@@ -19,7 +19,7 @@ export const login = createAsyncThunk<LoginResponse, LoginPayload>(
 
             await dispatch(fetchCurrentUser());
 
-            return data; 
+            return data;
         } catch (error: any) {
             if (error.response?.data?.message) {
                 return rejectWithValue(error.response.data.message);

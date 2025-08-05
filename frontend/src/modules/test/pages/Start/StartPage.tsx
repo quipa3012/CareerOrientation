@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Card } from "antd";
+import { PlayCircleOutlined, HistoryOutlined } from "@ant-design/icons";
 import styles from "./StartPage.module.scss";
 
 const StartPage: React.FC = () => {
@@ -34,6 +35,7 @@ const StartPage: React.FC = () => {
                     type="primary"
                     size="large"
                     onClick={handleStart}
+                    icon={<PlayCircleOutlined />}
                     className={styles.startButton}
                 >
                     Bắt đầu Làm Trắc Nghiệm
@@ -45,6 +47,7 @@ const StartPage: React.FC = () => {
                     type="default"
                     size="large"
                     onClick={handleGetTestHistory}
+                    icon={<HistoryOutlined />}
                     className={styles.startButton}
                 >
                     Xem Lại Lịch Sử Gợi Ý
