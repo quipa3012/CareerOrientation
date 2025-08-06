@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Card, Descriptions, Spin, Avatar, Button } from "antd";
+import { Card, Descriptions, Spin, Avatar, Button, Alert } from "antd";
 import { UserOutlined, EditOutlined, KeyOutlined } from "@ant-design/icons";
 import type { RootState, AppDispatch } from "../../../../store/store";
 import { fetchCurrentUser } from "../../stores/UserSlice";
@@ -56,6 +56,17 @@ const AccountPage: React.FC = () => {
                     <Spin tip="Đang tải thông tin..." />
                 ) : (
                     <>
+
+                        {!user.passwordChanged && (
+                            <Alert
+                                message="Mật khẩu của bạn chưa được đổi"
+                                description="Vì lý do bảo mật, vui lòng đổi mật khẩu ngay sau lần đăng nhập đầu tiên."
+                                type="warning"
+                                showIcon
+                                style={{ marginBottom: "16px" }}
+                            />
+                        )}
+
                         <Descriptions column={1} bordered>
                             <Descriptions.Item label="Tên đăng nhập">
                                 {user.username}

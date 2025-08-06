@@ -15,4 +15,5 @@ public class UserResponse {
     String email;
     String roleName;
     String profileImageUrl;
+    Boolean passwordChanged;
 }

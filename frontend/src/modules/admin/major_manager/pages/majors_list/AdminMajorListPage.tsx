@@ -17,7 +17,7 @@ const { Option } = Select;
 const AdminMajorListPage = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const { majors, loading } = useAppSelector(state => state.major);
+    const { majors, loading } = useAppSelector(state => state.majorManager);
     const [blocks, setBlocks] = useState<Block[]>([]);
 
     useEffect(() => {
@@ -54,8 +54,8 @@ const AdminMajorListPage = () => {
             title: "Hành động",
             key: "action",
             render: (_: any, record: any) => (
-                <>
-                    <Button type="link" onClick={() => navigate(`/admin/majors/edit/${record.id}`)}>
+                <div className={styles.actionsButtons}>
+                    <Button type="default" onClick={() => navigate(`/admin/majors/edit/${record.id}`)}>
                         Sửa
                     </Button>
                     <Popconfirm
@@ -64,9 +64,9 @@ const AdminMajorListPage = () => {
                         okText="Xoá"
                         cancelText="Huỷ"
                     >
-                        <Button danger type="link">Xoá</Button>
+                        <Button danger type="default">Xoá</Button>
                     </Popconfirm>
-                </>
+                </div>
             ),
         },
     ];

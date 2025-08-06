@@ -1,0 +1,29 @@
+.wrapper {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-around;
+    gap: 12px;
+}
+
+.resultCard {
+    margin-top: 20px;
+
+    p {
+        margin: 4px 0;
+
+        strong {
+            color: #1677ff;
+        }
+    }
+}

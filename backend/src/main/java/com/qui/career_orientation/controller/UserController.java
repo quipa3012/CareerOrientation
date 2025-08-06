@@ -2,6 +2,7 @@ package com.qui.career_orientation.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -9,8 +10,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.qui.career_orientation.entity.dto.request.ChangePasswordRequest;
+import com.qui.career_orientation.entity.dto.request.GenerateTeacherRequest;
 import com.qui.career_orientation.entity.dto.request.UserRequest;
 import com.qui.career_orientation.entity.dto.respond.ApiRespond;
+import com.qui.career_orientation.entity.dto.respond.GeneratedAccountResponse;
 import com.qui.career_orientation.entity.dto.respond.UserResponse;
 import com.qui.career_orientation.service.UserService;
 
@@ -78,5 +81,12 @@ public class UserController {
         UserResponse updated = userService.changePassword(username, request);
 
         return ResponseEntity.ok(updated);
+    }
+
+    @PostMapping("/generate-teacher")
+    public ResponseEntity<GeneratedAccountResponse> generateTeacherAccount(
+            @RequestBody GenerateTeacherRequest request) {
+        GeneratedAccountResponse response = userService.generateTeacherAccount(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

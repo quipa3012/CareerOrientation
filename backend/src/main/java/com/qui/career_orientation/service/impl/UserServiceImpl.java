@@ -9,7 +9,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.qui.career_orientation.entity.*;
 import com.qui.career_orientation.entity.dto.request.ChangePasswordRequest;
+import com.qui.career_orientation.entity.dto.request.GenerateTeacherRequest;
 import com.qui.career_orientation.entity.dto.request.UserRequest;
+import com.qui.career_orientation.entity.dto.respond.GeneratedAccountResponse;
 import com.qui.career_orientation.entity.dto.respond.UserResponse;
 import com.qui.career_orientation.entity.mapper.UserMapper;
 import com.qui.career_orientation.exception.AppException;
@@ -20,6 +22,8 @@ import com.qui.career_orientation.service.UserService;
 import com.qui.career_orientation.util.constant.ErrorCode;
 import com.qui.career_orientation.util.constant.RoleConstant;
 
+import java.security.SecureRandom;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -171,6 +175,57 @@ public class UserServiceImpl implements UserService {
     private User getUserByIdOrThrow(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+    }
+
+    private String generateSecureRandomPassword(int length) {
+        final String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        final String lower = upper.toLowerCase();
+        final String digits = "0123456789";
+        final String symbols = "!@#$%&*()-_+=<>?";
+        final String all = upper + lower + digits + symbols;
+
+        SecureRandom random = new SecureRandom();
+        StringBuilder pwd = new StringBuilder(length);
+
+        pwd.append(upper.charAt(random.nextInt(upper.length())));
+        pwd.append(lower.charAt(random.nextInt(lower.length())));
+        pwd.append(digits.charAt(random.nextInt(digits.length())));
+        pwd.append(symbols.charAt(random.nextInt(symbols.length())));
+
+        for (int i = 4; i < length; i++) {
+            pwd.append(all.charAt(random.nextInt(all.length())));
+        }
+
+        List<Character> chars = pwd.chars().mapToObj(c -> (char) c).collect(Collectors.toList());
+        Collections.shuffle(chars, random);
+
+        StringBuilder finalPwd = new StringBuilder();
+        chars.forEach(finalPwd::append);
+
+        return finalPwd.toString();
+    }
+
+    @Override
+    public GeneratedAccountResponse generateTeacherAccount(GenerateTeacherRequest request) {
+        checkDuplicateUsernameAndEmail(request.getUsername(), request.getEmail());
+
+        Role role = getRoleOrThrow(RoleConstant.TEACHER.name());
+
+        String rawPassword = generateSecureRandomPassword(12);
+
+        User user = User.builder()
+                .username(request.getUsername())
+                .fullName(request.getFullName())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(rawPassword))
+                .role(role)
+                .passwordChanged(false)
+                .profileImageUrl(null)
+                .build();
+
+        userRepository.save(user);
+
+        return new GeneratedAccountResponse(user.getUsername(), rawPassword);
     }
 
 }

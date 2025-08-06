@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Layout, Menu, Avatar, Dropdown, message } from "antd";
 import {
     UserOutlined,
@@ -19,8 +19,16 @@ const { Header: AntHeader } = Layout;
 const AdminHeader: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
+    const currentUser = useSelector((state: any) => state.user.currentUser);
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || "";
 
     const { accessToken } = useSelector((state: any) => state.auth);
+
+    const avatarSrc = useMemo(() => {
+        const url = currentUser?.profileImageUrl;
+        if (!url) return undefined;
+        return url.startsWith("http") ? url : `${backendUrl}${url}`;
+    }, [currentUser?.profileImageUrl, backendUrl]);
 
     const handleLogout = async () => {
         try {
@@ -83,7 +91,18 @@ const AdminHeader: React.FC = () => {
             label: (
                 <div className={styles.user}>
                     <Dropdown menu={userMenu} placement="bottomRight" arrow>
-                        <Avatar size="large" icon={<UserOutlined />} />
+                        <div className={styles.avatarWrapper}>
+                            <Avatar
+                                size="large"
+                                src={avatarSrc}
+                                alt={currentUser?.fullName || currentUser?.username || ""}
+                            >
+                                {!avatarSrc && <UserOutlined />}
+                            </Avatar>
+                            {currentUser?.fullName && (
+                                <span className={styles.fullName}>{currentUser.fullName}</span>
+                            )}
+                        </div>
                     </Dropdown>
                 </div>
             ),

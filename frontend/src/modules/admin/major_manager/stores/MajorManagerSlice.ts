@@ -59,7 +59,6 @@ export const deleteMajor = createAsyncThunk("majors/delete", async (id: number, 
     dispatch(fetchMajors());
 });
 
-// =================== SLICE ===================
 const majorManagerSlice = createSlice({
     name: "majorManager",
     initialState,
@@ -97,6 +96,17 @@ const majorManagerSlice = createSlice({
 
             .addCase(deleteMajor.rejected, (state, action) => {
                 state.error = action.error.message ?? "Xoá ngành thất bại";
+            })
+            .addCase(fetchMajorsByBlock.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(fetchMajorsByBlock.fulfilled, (state, action) => {
+                state.majors = action.payload;
+                state.loading = false;
+            })
+            .addCase(fetchMajorsByBlock.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message ?? "Lỗi khi lấy ngành theo khối";
             });
     },
 });

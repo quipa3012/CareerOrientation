@@ -35,6 +35,20 @@
             }
         }
 
+        .avatarWrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .fullName {
+            font-weight: 500;
+            font-size: 15px;
+            color: #333;
+            white-space: nowrap;
+        }
+
         .span {
             width: 100%;
         }

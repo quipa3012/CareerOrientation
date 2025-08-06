@@ -114,18 +114,23 @@ const Header: React.FC = () => {
             label: (
                 <div className={styles.user}>
                     <Dropdown menu={userMenu} placement="bottomRight" arrow>
-                        <Avatar
-                            size="large"
-                            src={avatarSrc}
-                            alt={currentUser?.fullName || currentUser?.username || ""}
-                        >
-                            {!avatarSrc && <UserOutlined />}
-                        </Avatar>
-
+                        <div className={styles.avatarWrapper}>
+                            <Avatar
+                                size="large"
+                                src={avatarSrc}
+                                alt={currentUser?.fullName || currentUser?.username || ""}
+                            >
+                                {!avatarSrc && <UserOutlined />}
+                            </Avatar>
+                            {authenticated && currentUser?.fullName && (
+                                <span className={styles.fullName}>{currentUser.fullName}</span>
+                            )}
+                        </div>
                     </Dropdown>
                 </div>
             ),
-        },
+        }
+        ,
     ];
 
     return (
