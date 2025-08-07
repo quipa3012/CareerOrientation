@@ -176,6 +176,16 @@ public class DefaultDataServiceImpl implements DefaultDataService {
                                 "Test User account created with username 'user' and password 'user'. Please change it immediately after login.");
         }
 
+        public void createTestTeacherAccountIfNotExists() {
+                createDefaultAccountIfNotExists(
+                                "teacher",
+                                "Test Teacher",
+                                "teacher@gmail.com",
+                                "teacher",
+                                RoleConstant.TEACHER.name(),
+                                "Test Teacher account created with username 'teacher' and password 'teacher'. Please change it immediately after login.");
+        }
+
         /** BLOCKS */
 
         private static final List<Block> DEFAULT_BLOCKS = List.of(
@@ -409,5 +419,6 @@ public class DefaultDataServiceImpl implements DefaultDataService {
                 createDefaultQuestions();
                 createAdminAccountIfNotExists();
                 createTestUserAccountIfNotExists();
+                createTestTeacherAccountIfNotExists();
         }
 }

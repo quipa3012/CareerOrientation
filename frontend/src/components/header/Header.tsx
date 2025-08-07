@@ -5,7 +5,12 @@ import {
     LogoutOutlined,
     LoginOutlined,
     DashboardOutlined,
-    HomeOutlined
+    HomeOutlined,
+    InfoCircleOutlined,
+    PhoneOutlined,
+    BulbOutlined,
+    AppstoreOutlined,
+    ReadOutlined
 } from "@ant-design/icons";
 import styles from "./Header.module.scss";
 import { Link, useNavigate } from "react-router-dom";
@@ -77,6 +82,11 @@ const Header: React.FC = () => {
                 </Link>
             ),
         },
+        role === "TEACHER" && authenticated && {
+            key: "teacher",
+            icon: <DashboardOutlined />,
+            label: <Link to="/teacher">Trang Giáo Viên</Link>,
+        },
         role === "ADMIN" && authenticated && {
             key: "admin",
             icon: <DashboardOutlined />,
@@ -91,22 +101,27 @@ const Header: React.FC = () => {
         },
         {
             key: "about",
+            icon: <InfoCircleOutlined />,
             label: <Link to="/about">Giới Thiệu</Link>
         },
         {
             key: "contact",
+            icon: <PhoneOutlined />,
             label: <Link to="/contact">Liên Hệ</Link>
         },
         {
             key: "test",
+            icon: <BulbOutlined />,
             label: <Link to="/test/start">Gợi Ý Khối Học</Link>
         },
         {
             key: "major",
+            icon: <AppstoreOutlined />,
             label: <Link to="/majors">Ngành Học</Link>
         },
         {
             key: "class",
+            icon: <ReadOutlined />,
             label: <Link to="/">Lớp Học</Link>
         },
         {

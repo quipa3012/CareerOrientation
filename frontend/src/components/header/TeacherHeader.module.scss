@@ -1,0 +1,56 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    position: fixed;
+    width: 100%;
+    z-index: 3;
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    border-radius: 0 0 8px 8px;
+
+    .menu {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #333;
+            letter-spacing: 1px;
+        }
+
+        .user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            margin-top: 5px;
+
+            &:hover {
+                color: #007bff;
+                transition: color 0.2s ease;
+            }
+        }
+
+        .avatarWrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .fullName {
+            font-weight: 500;
+            font-size: 15px;
+            color: #333;
+            white-space: nowrap;
+        }
+
+        .span {
+            width: 100%;
+        }
+    }
+}
