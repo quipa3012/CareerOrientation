@@ -39,6 +39,8 @@ public enum ErrorCode {
     BLOCK_NOT_FOUND(1025, "Không tìm thấy khối học", HttpStatus.NOT_FOUND),
     MAJOR_NOT_FOUND(1026, "Không tìm thấy ngành học", HttpStatus.NOT_FOUND),
     QUESTION_NOT_FOUND(1027, "Không tìm thấy câu hỏi", HttpStatus.NOT_FOUND),
+    ANNOUNCEMENT_NOT_FOUND(1028, "Không tìm thấy thông báo", HttpStatus.NOT_FOUND),
+    ACCESS_DENIED(1029, "Truy cập bị từ chối", HttpStatus.FORBIDDEN),
     UNCATEGORIZED_EXCEPTION(1111, "Lỗi chưa được phân loại", HttpStatus.INTERNAL_SERVER_ERROR);
 
     final int code;

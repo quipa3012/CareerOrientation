@@ -24,12 +24,12 @@ public class TestResult {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long userId; // User làm bài (nếu đăng nhập)
+    private Long userId;
 
     @Column(columnDefinition = "json")
-    private String answers; // JSON: {"Q1":5,"Q2":3,...}
+    private String answers;
 
-    private String predictedMajor; // Ngành AI dự đoán
+    private String predictedMajor;
 
     private LocalDateTime createdAt;
 }

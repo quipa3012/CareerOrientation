@@ -1,6 +1,7 @@
 import { Route } from "react-router-dom";
 import ProtectedRoute from "../../components/ProtectedRoute";
 import TeacherLayout from "../../layouts/TeacherLayout";
+import ClassManagerRoutes from "./class/router/ClassManagerRoutes";
 
 const TeacherRoutes = (
     <Route
@@ -11,8 +12,9 @@ const TeacherRoutes = (
             </ProtectedRoute>
         }
     >
-        <Route index element={<div>Teacher Dashboard</div>} />
-        <Route path="classes" element={<div>Quản lý lớp học</div>} />
+
+        {ClassManagerRoutes}
+
         <Route path="materials" element={<div>Thống kê</div>} />
         <Route path="*" element={<div>Teacher Not Found</div>} />
     </Route>

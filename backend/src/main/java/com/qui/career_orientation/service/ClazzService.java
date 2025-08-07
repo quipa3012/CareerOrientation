@@ -3,16 +3,22 @@ package com.qui.career_orientation.service;
 import java.util.List;
 
 import com.qui.career_orientation.entity.Clazz;
+import com.qui.career_orientation.entity.dto.request.ClazzRequest;
+import com.qui.career_orientation.entity.dto.respond.ClazzResponse;
 
 public interface ClazzService {
+    ClazzResponse createClazz(ClazzRequest request);
 
-    Clazz createClazz(String name);
+    ClazzResponse getClazzById(Long id);
 
-    Clazz getClazzById(Long id);
+    List<ClazzResponse> getAllClazzes();
 
-    List<Clazz> getAllClazzes();
-
-    Clazz updateClazz(Long id, String newName);
+    ClazzResponse updateClazz(Long id, ClazzRequest request);
 
     void deleteClazz(Long id);
+
+    Clazz getClazzEntityById(Long id);
+
+    List<ClazzResponse> getClassesByTeacher(Long teacherId);
+
 }

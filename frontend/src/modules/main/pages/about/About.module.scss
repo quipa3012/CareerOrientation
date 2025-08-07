@@ -1,0 +1,54 @@
+$primary-color: #1677ff;
+$section-padding: 60px 20px;
+$light-bg: #f0f5ff;
+
+.about {
+    background-color: #fff;
+
+    .hero {
+        padding: $section-padding;
+        background: $light-bg;
+
+        img {
+            width: 100%;
+            border-radius: 8px;
+        }
+    }
+
+    .section {
+        padding: $section-padding;
+
+        &--gray {
+            background: #fafafa;
+        }
+
+        &__title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+    }
+
+    .team-card {
+        text-align: center;
+
+        img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 16px;
+        }
+    }
+
+    .footer {
+        background: #001529;
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+
+        p {
+            margin: 0;
+            color: #fff;
+        }
+    }
+}

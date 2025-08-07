@@ -23,6 +23,16 @@ public class Clazz {
     @Column(nullable = false)
     String name;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "teacher_id", nullable = false)
+    User teacher;
+
+    @Column
+    String password;
+
     @OneToMany(mappedBy = "clazz", cascade = CascadeType.ALL, orphanRemoval = true)
     List<ClassUser> classUsers;
+
+    @OneToMany(mappedBy = "clazz", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Announcement> announcements;
 }

@@ -1,0 +1,110 @@
+.container {
+    padding: 24px;
+    background-color: #f9f9f9;
+    min-height: 100vh;
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+
+        h3 {
+            margin: 0;
+        }
+    }
+
+    .content {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 24px;
+    }
+
+    .membersSection {
+        background-color: #fff;
+        padding: 16px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+        h4 {
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .memberItem {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            border-bottom: 1px solid #f0f0f0;
+
+            &:last-child {
+                border-bottom: none;
+            }
+
+            .avatar {
+                flex-shrink: 0;
+            }
+
+            .name {
+                font-weight: 500;
+            }
+
+            .role {
+                font-size: 12px;
+                color: #888;
+            }
+        }
+    }
+
+    .announcementsSection {
+        background-color: #fff;
+        padding: 16px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+        .sectionHeader {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+
+            h4 {
+                margin: 0;
+            }
+        }
+
+        .announcementItem {
+            padding: 12px;
+            border: 1px solid #f0f0f0;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+
+            &:hover {
+                background-color: #fafafa;
+                border-color: #d9d9d9;
+            }
+
+            .title {
+                font-weight: 600;
+                margin-bottom: 4px;
+            }
+
+            .content {
+                font-size: 14px;
+                color: #555;
+                max-height: 60px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .date {
+                font-size: 12px;
+                color: #999;
+                margin-top: 4px;
+            }
+        }
+    }
+}
