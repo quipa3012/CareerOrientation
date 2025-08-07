@@ -3,6 +3,7 @@ import AdminLayout from "../../layouts/AdminLayout";
 import ProtectedRoute from "../../components/ProtectedRoute";
 import MajorManagerRoutes from "./major_manager/router/MajorManagerRoutes";
 import UserManagerRoutes from "./user_manager/router/UserManagerRoutes";
+import QuestionManagerRoutes from "./question_manager/router/QuestionManagerRoutes";
 
 const AdminRoutes = (
 
@@ -13,6 +14,7 @@ const AdminRoutes = (
     }>
         {MajorManagerRoutes}
         {UserManagerRoutes}
+        {QuestionManagerRoutes}
 
         <Route path="dashboard" element={<div>Admin Dashboard</div>} />
         <Route path="users" element={<div>Manage Users</div>} />

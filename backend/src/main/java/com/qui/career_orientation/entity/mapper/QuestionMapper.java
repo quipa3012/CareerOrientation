@@ -12,4 +12,14 @@ public class QuestionMapper {
                 .category(entity.getCategory())
                 .build();
     }
+
+    public static Question toEntity(QuestionDTO dto) {
+        return Question.builder()
+                .id(dto.getId())
+                .code(dto.getCode())
+                .content(dto.getContent())
+                .category(dto.getCategory())
+                .build();
+    }
+
 }

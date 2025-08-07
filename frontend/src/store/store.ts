@@ -5,6 +5,7 @@ import testReducer from "../modules/test/stores/TestSlice"
 import majorReducer from "../modules/major/stores/MajorSlice"
 import userManagerReducer from "../modules/admin/user_manager/stores/UserManagerSlice"
 import majorManagerReducer from "../modules/admin/major_manager/stores/MajorManagerSlice"
+import questionReducer from "../modules/admin/question_manager/stores/QuestionSlice";
 import { fetchQuestions } from "../modules/test/stores/TestSlice"
 import { setAuth, clearAuth } from "../modules/auth/stores/AuthSlice"
 import { setupInterceptors } from "../axios/setupInterceptors"
@@ -19,6 +20,7 @@ const store = configureStore({
         major: majorReducer,
         majorManager: majorManagerReducer,
         userManager: userManagerReducer,
+        questions: questionReducer,
     }
 })
 

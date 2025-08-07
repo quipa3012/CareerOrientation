@@ -38,6 +38,7 @@ public enum ErrorCode {
     USER_NOT_IN_CLAZZ(1024, "Thành viên không có trong lớp", HttpStatus.NOT_FOUND),
     BLOCK_NOT_FOUND(1025, "Không tìm thấy khối học", HttpStatus.NOT_FOUND),
     MAJOR_NOT_FOUND(1026, "Không tìm thấy ngành học", HttpStatus.NOT_FOUND),
+    QUESTION_NOT_FOUND(1027, "Không tìm thấy câu hỏi", HttpStatus.NOT_FOUND),
     UNCATEGORIZED_EXCEPTION(1111, "Lỗi chưa được phân loại", HttpStatus.INTERNAL_SERVER_ERROR);
 
     final int code;
