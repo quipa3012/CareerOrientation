@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Button, Card, List, Modal, Table, Typography, Form, Input, message, Spin, Popconfirm } from "antd";
-import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Button, Card, List, Modal, Table, Typography, Form, Input, message, Spin, Popconfirm, Avatar } from "antd";
+import { PlusOutlined, EditOutlined, DeleteOutlined, UserOutlined } from "@ant-design/icons";
 import { ClassManagerService } from "../../services/ClassManagerService";
 import type { Clazz, ClassUser, Announcement } from "../../interfaces/ClassManagerInterface";
 import styles from "./ClassDetailPage.module.scss";
@@ -17,13 +17,15 @@ const ClassDetailPage = () => {
     const [announcements, setAnnouncements] = useState<Announcement[]>([]);
     const [loading, setLoading] = useState(true);
 
-    // Modal state
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [currentEdit, setCurrentEdit] = useState<Announcement | null>(null);
 
     const [form] = Form.useForm();
     const [editForm] = Form.useForm();
+
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 
     const fetchData = async () => {
         try {
@@ -88,24 +90,72 @@ const ClassDetailPage = () => {
         }
     };
 
+    const handleRemoveMember = async (memberId: number) => {
+        try {
+            await ClassManagerService.removeUserFromClass(classId, memberId);
+            message.success("Đã xóa thành viên khỏi lớp!");
+            fetchData();
+        } catch (error) {
+            console.error(error);
+            message.error("Xóa thành viên thất bại.");
+        }
+    };
+
     const memberColumns = [
+
+        {
+            title: "Ảnh đại diện",
+            dataIndex: "profileImageUrl",
+            key: "profileImageUrl",
+            render: (text: string) => {
+                const src = text && text.startsWith("http") ? text : (text ? `${backendUrl}${text}` : null);
+
+                return src ? (
+                    <Avatar src={src} size={80} />
+                ) : (
+                    <Avatar icon={<UserOutlined />} size={80} />
+                )
+            }
+        },
+
         {
             title: "Tên",
-            dataIndex: ["user", "fullName"],
-            key: "name",
+            dataIndex: "fullName",
+            key: "fullName",
         },
         {
             title: "Username",
-            dataIndex: ["user", "username"],
+            dataIndex: "username",
             key: "username",
         },
         {
-            title: "Vai trò",
-            dataIndex: "teacher",
-            key: "role",
-            render: (isTeacher: boolean) => (isTeacher ? "Giáo viên" : "Học viên"),
+            title: "Email",
+            dataIndex: "email",
+            key: "email",
+        },
+        {
+            title: "Hành động",
+            key: "actions",
+            render: (record: ClassUser) => (
+                <>
+                    <Popconfirm
+                        title="Bạn có chắc muốn xóa học sinh này khỏi lớp?"
+                        onConfirm={() => handleRemoveMember(record.id)}
+                        okText="Xóa"
+                        icon={<DeleteOutlined />}
+                        cancelText="Hủy"
+                    >
+                        <Button
+                            icon={<DeleteOutlined />}
+                            type="link" danger>
+                            Xóa
+                        </Button>
+                    </Popconfirm>
+                </>
+            ),
         },
     ];
+
 
     return (
         <div className={styles.classDetailContainer}>
@@ -113,9 +163,9 @@ const ClassDetailPage = () => {
                 <Spin size="large" />
             ) : (
                 <>
-
-
+                    <Title level={3}>Tên lớp học: {clazz?.name}</Title>
                     <Card
+                        style={{ marginTop: 50 }}
                         title="Bảng thông báo"
                         extra={
                             <Button type="primary" icon={<PlusOutlined />} onClick={() => setIsAddModalOpen(true)}>
@@ -155,32 +205,29 @@ const ClassDetailPage = () => {
                                     ]}
                                 >
                                     <List.Item.Meta
-                                        title={
-                                            <div className={styles.announcementTitle}>
-                                                {item.title}
-                                                <br />
-                                                <span className={styles.announcementDate}>
-                                                    {new Date(item.createdAt).toLocaleDateString("vi-VN")}
-                                                </span>
-                                            </div>
+                                        title={item.title}
+                                        description={
+                                            <>
+                                                <p>Ngày: {new Date(item.createdAt).toLocaleDateString("vi-VN")}</p>
+                                                <div>{item.content}</div>
+                                            </>
                                         }
-                                        description={item.content}
                                     />
                                 </List.Item>
                             )}
                         />
                     </Card>
 
-                    <Title level={3}>Chi tiết lớp: {clazz?.name}</Title>
-                    <p>ID lớp: {clazz?.id}</p>
 
-                    <Card title="Danh sách thành viên" style={{ marginBottom: 20 }}>
+
+                    <Card title="Danh sách thành viên" style={{ marginTop: 26 }}>
                         <Table
                             dataSource={members}
                             columns={memberColumns}
-                            rowKey={(record) => record.user.id}
+                            rowKey={(record) => record.id}
                             pagination={false}
                         />
+
                     </Card>
 
                     <Modal
@@ -209,7 +256,6 @@ const ClassDetailPage = () => {
                         </Form>
                     </Modal>
 
-                    {/* Modal chỉnh sửa */}
                     <Modal
                         title="Chỉnh sửa thông báo"
                         open={isEditModalOpen}
@@ -235,6 +281,7 @@ const ClassDetailPage = () => {
                             </Form.Item>
                         </Form>
                     </Modal>
+
                 </>
             )}
         </div>

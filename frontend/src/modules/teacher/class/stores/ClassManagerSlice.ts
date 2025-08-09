@@ -36,6 +36,23 @@ export const fetchMyClasses = createAsyncThunk(
     }
 );
 
+export const deleteClass = createAsyncThunk(
+    "classManager/deleteClass",
+    async (id: number) => {
+        await ClassManagerService.deleteClass(id);
+        return id;
+    }
+);
+
+export const updateClass = createAsyncThunk(
+    'class/updateClass',
+    async ({ id, data }: { id: number; data: { name?: string; password?: string; teacherId?: number } }) => {
+        return await ClassManagerService.updateClass(id, data);
+    }
+);
+
+
+
 export const fetchUsersInClass = createAsyncThunk("classManager/fetchUsersInClass", async (classId: number) => {
     return await ClassManagerService.getUsersInClass(classId);
 });
@@ -89,7 +106,31 @@ const classManagerSlice = createSlice({
             }).addCase(fetchMyClasses.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message ?? "Failed to load my classes";
-            });
+            })
+            .addCase(deleteClass.fulfilled, (state, action) => {
+                state.classes = state.classes.filter(c => c.id !== action.payload);
+            })
+            .addCase(deleteClass.rejected, (state, action) => {
+                state.error = action.error.message ?? "Failed to delete class";
+            })
+            .addCase(updateClass.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(updateClass.fulfilled, (state, action) => {
+                state.loading = false;
+                const index = state.classes.findIndex(
+                    (c) => c.id === action.payload.id
+                );
+                if (index !== -1) {
+                    state.classes[index] = action.payload;
+                }
+            })
+            .addCase(updateClass.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message ?? "Failed to update class";
+            })
+            ;
     },
 });
 

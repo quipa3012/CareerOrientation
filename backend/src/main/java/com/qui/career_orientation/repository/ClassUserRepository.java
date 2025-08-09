@@ -14,4 +14,6 @@ public interface ClassUserRepository extends JpaRepository<ClassUser, Long> {
     Optional<ClassUser> findByClazz_IdAndUser_Id(Long clazzId, Long userId);
 
     List<ClassUser> findByClazz_Id(Long clazzId);
+
+    List<ClassUser> findByUser_Id(Long userId);
 }

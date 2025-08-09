@@ -57,7 +57,7 @@ const TeacherHeader: React.FC = () => {
         {
             key: "logo",
             label: (
-                <Link to="/teacher">
+                <Link to="/teacher/classes">
                     <div className={styles.logo}>Teacher Panel</div>
                 </Link>
             ),

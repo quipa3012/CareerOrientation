@@ -17,7 +17,7 @@ const AddClassPage = () => {
             const { name, password } = values;
             await ClassManagerService.createClass(name.trim(), password?.trim());
             message.success("Tạo lớp thành công");
-            navigate("/classes");
+            navigate("/teacher/classes");
         } catch (err) {
             message.error("Tạo lớp thất bại");
         } finally {

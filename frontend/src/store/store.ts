@@ -7,6 +7,7 @@ import userManagerReducer from "../modules/admin/user_manager/stores/UserManager
 import majorManagerReducer from "../modules/admin/major_manager/stores/MajorManagerSlice"
 import questionReducer from "../modules/admin/question_manager/stores/QuestionSlice";
 import classManagerReducer from "../modules/teacher/class/stores/ClassManagerSlice"
+import classReducer from "../modules/class/stores/ClassSlice"
 import { fetchQuestions } from "../modules/test/stores/TestSlice"
 import { setAuth, clearAuth } from "../modules/auth/stores/AuthSlice"
 import { setupInterceptors } from "../axios/setupInterceptors"
@@ -23,6 +24,7 @@ const store = configureStore({
         userManager: userManagerReducer,
         questions: questionReducer,
         classManager: classManagerReducer,
+        class: classReducer,
     }
 })
 
@@ -40,7 +42,7 @@ setupInterceptors(store);
             role: role,
         }));
 
-        store.dispatch(fetchCurrentUser());
+        await store.dispatch(fetchCurrentUser());
     } catch (err) {
         store.dispatch(clearAuth());
         store.dispatch(clearCurrentUser());

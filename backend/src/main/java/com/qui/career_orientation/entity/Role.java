@@ -2,6 +2,8 @@ package com.qui.career_orientation.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -20,5 +22,6 @@ public class Role {
     String name;
 
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     List<PermissionRole> permissionRoles;
 }

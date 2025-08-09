@@ -6,34 +6,34 @@ const CLASS_USER_API = "/class-users";
 const ANNOUNCEMENT_API = "/announcements";
 
 export const ClassManagerService = {
-    getAllClasses: (): Promise<Clazz[]> => {
+    getAllClasses: async (): Promise<Clazz[]> => {
         return axiosClient.get(CLASS_API).then(res => res.data as Clazz[]);
     },
 
-    getClassById: (id: number): Promise<Clazz> => {
+    getClassById: async (id: number): Promise<Clazz> => {
         return axiosClient.get(`${CLASS_API}/${id}`).then(res => res.data as Clazz);
     },
 
-    getMyClasses: (): Promise<Clazz[]> => {
+    getMyClasses: async (): Promise<Clazz[]> => {
         return axiosClient.get(`${CLASS_API}/my-classes`).then(res => res.data as Clazz[]);
     },
 
-    createClass: (name: string, password?: string): Promise<Clazz> => {
+    createClass: async (name: string, password?: string): Promise<Clazz> => {
         return axiosClient.post(CLASS_API, { name, password }).then(res => res.data as Clazz);
     },
 
-    updateClass: (id: number, name: string): Promise<Clazz> => {
-        return axiosClient.put(`${CLASS_API}/${id}`, null, {
-            params: { name },
-        }).then(res => res.data as Clazz);
+    updateClass: (id: number, data: { name?: string; password?: string; teacherId?: number }): Promise<Clazz> => {
+        return axiosClient.put(`${CLASS_API}/${id}`, data)
+            .then(res => res.data as Clazz);
     },
 
     deleteClass: (id: number): Promise<void> => {
         return axiosClient.delete(`${CLASS_API}/${id}`);
     },
 
-    getUsersInClass: (classId: number): Promise<ClassUser[]> => {
-        return axiosClient.get(`${CLASS_USER_API}/clazz/${classId}`).then(res => res.data as ClassUser[]);
+    getUsersInClass: async (classId: number): Promise<ClassUser[]> => {
+        const res = await axiosClient.get(`${CLASS_USER_API}/${classId}/members`);
+        return res.data as ClassUser[];
     },
 
     addUserToClass: (classId: number, userId: number, isTeacher = false): Promise<ClassUser> => {
@@ -43,7 +43,7 @@ export const ClassManagerService = {
     },
 
     removeUserFromClass: (classId: number, userId: number): Promise<void> => {
-        return axiosClient.delete(`${CLASS_USER_API}/remove`, {
+        return axiosClient.delete(`${CLASS_USER_API}/${classId}/${userId}`, {
             params: { classId, userId },
         });
     },

@@ -85,7 +85,7 @@ const Header: React.FC = () => {
         role === "TEACHER" && authenticated && {
             key: "teacher",
             icon: <DashboardOutlined />,
-            label: <Link to="/teacher">Trang Giáo Viên</Link>,
+            label: <Link to="/teacher/classes">Trang Giáo Viên</Link>,
         },
         role === "ADMIN" && authenticated && {
             key: "admin",
@@ -110,20 +110,22 @@ const Header: React.FC = () => {
             label: <Link to="/contact">Liên Hệ</Link>
         },
         {
-            key: "test",
-            icon: <BulbOutlined />,
-            label: <Link to="/test/start">Gợi Ý Khối Học</Link>
-        },
-        {
             key: "major",
             icon: <AppstoreOutlined />,
             label: <Link to="/majors">Ngành Học</Link>
         },
-        {
-            key: "class",
-            icon: <ReadOutlined />,
-            label: <Link to="/">Lớp Học</Link>
-        },
+        ...(role !== "TEACHER" && role !== "ADMIN" ? [
+            {
+                key: "test",
+                icon: <BulbOutlined />,
+                label: <Link to="/test/start">Gợi Ý Khối Học</Link>
+            },
+            {
+                key: "class",
+                icon: <ReadOutlined />,
+                label: <Link to="/classes">Lớp Học</Link>
+            }
+        ] : []),
         {
             key: "auth",
             label: (
