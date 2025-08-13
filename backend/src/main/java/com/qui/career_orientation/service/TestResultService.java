@@ -9,4 +9,7 @@ public interface TestResultService {
     TestResultDTO submitTest(Long userId, SubmitTestRequest request);
 
     List<TestResultDTO> getResultsByUser(Long userId);
+
+    List<TestResultDTO> getResultsByClass(Long clazzId);
+
 }

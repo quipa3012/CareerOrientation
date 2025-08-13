@@ -4,6 +4,7 @@ import ProtectedRoute from "../../components/ProtectedRoute";
 import MajorManagerRoutes from "./major_manager/router/MajorManagerRoutes";
 import UserManagerRoutes from "./user_manager/router/UserManagerRoutes";
 import QuestionManagerRoutes from "./question_manager/router/QuestionManagerRoutes";
+import Dashboard from "./dashboard/pages/Dashboard";
 
 const AdminRoutes = (
 
@@ -16,9 +17,7 @@ const AdminRoutes = (
         {UserManagerRoutes}
         {QuestionManagerRoutes}
 
-        <Route path="dashboard" element={<div>Admin Dashboard</div>} />
-        <Route path="users" element={<div>Manage Users</div>} />
-        <Route path="settings" element={<div>Admin Settings</div>} />
+        <Route index element={<Dashboard />} />
         <Route path="*" element={<div>Admin Not Found</div>} />
     </Route>
 );

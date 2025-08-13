@@ -10,4 +10,9 @@ import com.qui.career_orientation.entity.TestResult;
 @Repository
 public interface TestResultRepository extends JpaRepository<TestResult, Long> {
     List<TestResult> findByUserId(Long userId);
+
+    List<TestResult> findByUserIdIn(List<Long> userIds);
+
+    List<TestResult> findByUserIdInOrderByCreatedAtDesc(List<Long> userIds);
+
 }

@@ -32,12 +32,15 @@ public class TestResultController {
         return ResponseEntity.ok(resultDTO);
     }
 
-    /**
-     * Lấy lịch sử bài test theo user
-     */
     @GetMapping("/{userId}")
     public ResponseEntity<List<TestResultDTO>> getResultsByUser(@PathVariable Long userId) {
         List<TestResultDTO> results = testResultService.getResultsByUser(userId);
         return ResponseEntity.ok(results);
     }
+
+    @GetMapping("/class/{clazzId}")
+    public ResponseEntity<List<TestResultDTO>> getResultsByClass(@PathVariable Long clazzId) {
+        return ResponseEntity.ok(testResultService.getResultsByClass(clazzId));
+    }
+
 }

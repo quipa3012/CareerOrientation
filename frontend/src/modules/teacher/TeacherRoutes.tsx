@@ -2,6 +2,7 @@ import { Route } from "react-router-dom";
 import ProtectedRoute from "../../components/ProtectedRoute";
 import TeacherLayout from "../../layouts/TeacherLayout";
 import ClassManagerRoutes from "./class/router/ClassManagerRoutes";
+import StatisticalRoutes from "./statistical/router/StatisticalRoutes";
 
 const TeacherRoutes = (
     <Route
@@ -14,6 +15,7 @@ const TeacherRoutes = (
     >
 
         {ClassManagerRoutes}
+        {StatisticalRoutes}
 
         <Route path="materials" element={<div>Thống kê</div>} />
         <Route path="*" element={<div>Teacher Not Found</div>} />

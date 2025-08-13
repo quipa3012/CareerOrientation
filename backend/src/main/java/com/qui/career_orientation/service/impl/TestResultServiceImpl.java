@@ -15,6 +15,7 @@ import com.qui.career_orientation.entity.dto.TestResultDTO;
 import com.qui.career_orientation.entity.dto.request.SubmitTestRequest;
 import com.qui.career_orientation.entity.mapper.TestResultMapper;
 import com.qui.career_orientation.repository.BlockRepository;
+import com.qui.career_orientation.repository.ClassUserRepository;
 import com.qui.career_orientation.repository.TestResultRepository;
 import com.qui.career_orientation.service.TestResultService;
 
@@ -27,7 +28,8 @@ public class TestResultServiceImpl implements TestResultService {
     private final TestResultRepository testResultRepository;
     private final RestTemplate restTemplate;
     private final BlockRepository blockRepository;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
+    private final ClassUserRepository classUserRepository;
 
     private static final String AI_URL = "http://localhost:5000/predict";
 
@@ -77,4 +79,17 @@ public class TestResultServiceImpl implements TestResultService {
                 .map(TestResultMapper::toDTO)
                 .toList();
     }
+
+    @Override
+    public List<TestResultDTO> getResultsByClass(Long clazzId) {
+        List<Long> studentIds = classUserRepository.findStudentIdsByClazzId(clazzId);
+        if (studentIds.isEmpty())
+            return List.of();
+
+        return testResultRepository.findByUserIdInOrderByCreatedAtDesc(studentIds)
+                .stream()
+                .map(TestResultMapper::toDTO)
+                .toList();
+    }
+
 }

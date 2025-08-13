@@ -73,9 +73,9 @@ const TeacherHeader: React.FC = () => {
             label: <Link to="/teacher/classes">Lớp Giảng Dạy</Link>,
         },
         {
-            key: "materials",
+            key: "statistical",
             icon: <BookOutlined />,
-            label: <Link to="/teacher/materials">Tài Liệu</Link>,
+            label: <Link to="/teacher/statistical">Thống Kê</Link>,
         },
         {
             key: "auth",
