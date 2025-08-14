@@ -8,6 +8,7 @@ import TestRoutes from './test/router/TestRoutes';
 import MajorRoutes from './major/router/MajorRoutes';
 import TeacherRoutes from './teacher/TeacherRoutes';
 import ClassRoutes from './class/router/ClassRoutes';
+import DocumentRoutes from './document/router/DocumentRoutes';
 
 const AppRouter: React.FC = () => {
     return (
@@ -21,6 +22,7 @@ const AppRouter: React.FC = () => {
                 {MajorRoutes}
                 {TeacherRoutes}
                 {ClassRoutes}
+                {DocumentRoutes}
             </Routes>
         </BrowserRouter>
     );

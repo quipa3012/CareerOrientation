@@ -1,0 +1,16 @@
+.container {
+    background: #fff;
+    padding: 16px;
+    border-radius: 8px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    h2 {
+        margin: 0;
+    }
+}

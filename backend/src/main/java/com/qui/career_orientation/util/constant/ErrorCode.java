@@ -42,6 +42,7 @@ public enum ErrorCode {
     ANNOUNCEMENT_NOT_FOUND(1028, "Không tìm thấy thông báo", HttpStatus.NOT_FOUND),
     ACCESS_DENIED(1029, "Truy cập bị từ chối", HttpStatus.FORBIDDEN),
     INVALID_CLAZZ_PASSWORD(1030, "Mật khẩu lớp học không hợp lệ", HttpStatus.BAD_REQUEST),
+    DOCUMENT_NOT_FOUND(1031, "Không tìm thấy tài liệu", HttpStatus.NOT_FOUND),
     UNCATEGORIZED_EXCEPTION(1111, "Lỗi chưa được phân loại", HttpStatus.INTERNAL_SERVER_ERROR);
 
     final int code;

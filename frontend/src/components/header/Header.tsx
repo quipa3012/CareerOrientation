@@ -124,6 +124,11 @@ const Header: React.FC = () => {
                 key: "class",
                 icon: <ReadOutlined />,
                 label: <Link to="/classes">Lớp Học</Link>
+            },
+            {
+                key: "document",
+                icon: <ReadOutlined />,
+                label: <Link to="/documents">Tài Liệu</Link>
             }
         ] : []),
         {

@@ -9,6 +9,7 @@ import questionReducer from "../modules/admin/question_manager/stores/QuestionSl
 import classManagerReducer from "../modules/teacher/class/stores/ClassManagerSlice"
 import classReducer from "../modules/class/stores/ClassSlice"
 import StatisticalReducer from "../modules/teacher/statistical/stores/StatisticalSlice"
+import documentManagerReducer from "../modules/teacher/document/stores/DocumentManagerSlice"
 import { fetchQuestions } from "../modules/test/stores/TestSlice"
 import { setAuth, clearAuth } from "../modules/auth/stores/AuthSlice"
 import { setupInterceptors } from "../axios/setupInterceptors"
@@ -27,6 +28,7 @@ const store = configureStore({
         classManager: classManagerReducer,
         class: classReducer,
         statistical: StatisticalReducer,
+        documents: documentManagerReducer,
     }
 })
 

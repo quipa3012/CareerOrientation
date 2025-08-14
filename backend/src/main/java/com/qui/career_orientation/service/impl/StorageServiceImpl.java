@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 public class StorageServiceImpl implements StorageService {
 
     private final String AVATAR_UPLOAD_DIR = Paths.get("src/main/resources/static/uploads/avatars").toString();
+    private final String DOCUMENT_UPLOAD_DIR = Paths.get("src/main/resources/static/uploads/documents").toString();
 
     @Override
     public String storeAvatarFile(String username, MultipartFile file) {
@@ -74,4 +75,44 @@ public class StorageServiceImpl implements StorageService {
         } catch (IOException e) {
         }
     }
+
+    @Override
+    public String storeDocumentFile(String title, MultipartFile file) {
+        try {
+            Path uploadPath = Paths.get(DOCUMENT_UPLOAD_DIR);
+            log.info("storeDocumentFile called. uploadPath={}, fileName={}, empty={}",
+                    uploadPath.toAbsolutePath(), file.getOriginalFilename(), file.isEmpty());
+
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+                log.info("Created document upload dir: {}", uploadPath.toAbsolutePath());
+            }
+
+            String originalFilename = file.getOriginalFilename();
+            if (originalFilename == null || !originalFilename.contains(".")) {
+                log.warn("Invalid originalFilename: {}", originalFilename);
+                throw new AppException(ErrorCode.INVALID_FILE_NAME);
+            }
+
+            String extension = originalFilename.substring(originalFilename.lastIndexOf('.')).toLowerCase();
+            if (!List.of(".pdf").contains(extension)) {
+                log.warn("Invalid file type: {}", extension);
+                throw new AppException(ErrorCode.INVALID_FILE_TYPE);
+            }
+
+            String safeTitle = title.replaceAll("\\s+", "_");
+            String fileName = safeTitle + "_" + System.currentTimeMillis() + extension;
+            Path filePath = uploadPath.resolve(fileName).normalize();
+
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            log.info("Saved document file: {}", filePath.toAbsolutePath());
+
+            return "/uploads/documents/" + fileName;
+
+        } catch (IOException e) {
+            log.error("Failed to store document file", e);
+            throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
+        }
+    }
+    
 }

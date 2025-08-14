@@ -15,7 +15,8 @@ public class ApiEndpointConfig {
                 "/api/questions/**",
                 "api/majors/**",
                 "api/blocks/**",
-                "api/users"));
+                "api/users",
+                "api/documents/**"));
     }
 
     @Bean
