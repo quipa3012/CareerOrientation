@@ -106,23 +106,35 @@ const Home: React.FC = () => {
                     Ngành học nổi bật
                 </Title>
                 <Row gutter={[24, 24]}>
-                    {Array.from({ length: 3 }).map((_, idx) => (
+                    {[
+                        {
+                            name: "Nhóm ngành Công Nghệ Thông Tin",
+                            desc: "Nhóm ngành CNTT bao gồm các lĩnh vực như lập trình, phân tích dữ liệu, trí tuệ nhân tạo, an ninh mạng. Sinh viên sẽ được trang bị kiến thức về thuật toán, cơ sở dữ liệu, phát triển phần mềm và ứng dụng AI trong thực tế, giúp đáp ứng nhu cầu số hóa và công nghệ toàn cầu.",
+                        },
+                        {
+                            name: "Nhóm ngành Y Dược Sức Khỏe",
+                            desc: "Nhóm ngành Y Dược Sức Khỏe tập trung vào đào tạo các bác sĩ, dược sĩ, điều dưỡng và chuyên gia y tế khác. Sinh viên học về chăm sóc sức khỏe, nghiên cứu lâm sàng, y học dự phòng và các kỹ năng thực hành trong môi trường bệnh viện và phòng thí nghiệm.",
+                        },
+                        {
+                            name: "Nhóm ngành Kinh Tế Quản Lý",
+                            desc: "Nhóm ngành Kinh Tế Quản Lý cung cấp kiến thức về quản trị doanh nghiệp, tài chính, marketing, kế toán và logistics. Sinh viên sẽ học cách phân tích thị trường, lập kế hoạch chiến lược và quản lý nguồn lực hiệu quả trong môi trường kinh doanh hiện đại.",
+                        }
+                    ].map((major, idx) => (
                         <Col xs={24} md={8} key={idx}>
                             <Card hoverable>
                                 <img
                                     src={MajorImg}
-                                    alt="Ngành học"
+                                    alt={major.name}
                                     className={styles["card-img"]}
                                 />
-                                <Title level={4}>Tên ngành học {idx + 1}</Title>
-                                <Paragraph>
-                                    Mô tả ngắn gọn về ngành học này và tiềm năng trong tương lai.
-                                </Paragraph>
+                                <Title level={4}>{major.name}</Title>
+                                <Paragraph>{major.desc}</Paragraph>
                             </Card>
                         </Col>
                     ))}
                 </Row>
             </section>
+
         </div>
     );
 };

@@ -112,7 +112,7 @@ const Header: React.FC = () => {
         {
             key: "major",
             icon: <AppstoreOutlined />,
-            label: <Link to="/majors">Ngành Học</Link>
+            label: <Link to="/majors">Nhóm Ngành Học</Link>
         },
         ...(role !== "TEACHER" && role !== "ADMIN" ? [
             {

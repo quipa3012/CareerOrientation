@@ -6,7 +6,7 @@ public interface DefaultDataService {
 
     void createAdminAccountIfNotExists();
 
-    void createTestUserAccountIfNotExists();
+    void createDefaultStudentsIfNotExists();
 
     void createDefaultPermissions();
 
@@ -17,6 +17,8 @@ public interface DefaultDataService {
     void createDefaultMajors();
 
     void createDefaultQuestions();
+
+    void createDefaultTestResults();
 
     void init();
 }

@@ -62,7 +62,7 @@ const ResultPage: React.FC = () => {
                 </Title>
 
                 <Paragraph className={styles.resultText}>
-                    <b>Ngành dự đoán:</b> <span className={styles.predicted}>{result.predictedMajor}</span>
+                    <b>Khối học dự đoán:</b> <span className={styles.predicted}>{result.predictedMajor}</span>
                 </Paragraph>
 
                 <div className={styles.chartContainer}>

@@ -84,7 +84,7 @@ const AdminHeader: React.FC = () => {
         {
             key: "majors",
             icon: <SettingOutlined />,
-            label: <Link to="/admin/majors">Quản Lý Ngành học</Link>,
+            label: <Link to="/admin/majors">Quản Lý Nhóm Ngành học</Link>,
         },
         {
             key: "questions",

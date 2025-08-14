@@ -1,11 +1,13 @@
 package com.qui.career_orientation.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qui.career_orientation.entity.Block;
 import com.qui.career_orientation.entity.Major;
 import com.qui.career_orientation.entity.Permission;
 import com.qui.career_orientation.entity.PermissionRole;
 import com.qui.career_orientation.entity.Question;
 import com.qui.career_orientation.entity.Role;
+import com.qui.career_orientation.entity.TestResult;
 import com.qui.career_orientation.entity.User;
 import com.qui.career_orientation.exception.AppException;
 import com.qui.career_orientation.repository.*;
@@ -19,8 +21,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +41,7 @@ public class DefaultDataServiceImpl implements DefaultDataService {
         private final BlockRepository blockRepository;
         private final MajorRepository majorRepository;
         private final QuestionRepository questionRepository;
+        private final TestResultRepository testResultRepository;
 
         /** ==================== PERMISSION ==================== */
         private static final List<Permission> DEFAULT_PERMISSIONS = List.of(
@@ -166,16 +173,6 @@ public class DefaultDataServiceImpl implements DefaultDataService {
                                 "Admin account created with username 'admin' and password 'admin'. Please change it immediately after login.");
         }
 
-        public void createTestUserAccountIfNotExists() {
-                createDefaultAccountIfNotExists(
-                                "student",
-                                "Test Student",
-                                "student@gmail.com",
-                                "student",
-                                RoleConstant.STUDENT.name(),
-                                "Test User account created with username 'user' and password 'user'. Please change it immediately after login.");
-        }
-
         public void createTestTeacherAccountIfNotExists() {
                 createDefaultAccountIfNotExists(
                                 "teacher",
@@ -184,6 +181,24 @@ public class DefaultDataServiceImpl implements DefaultDataService {
                                 "teacher",
                                 RoleConstant.TEACHER.name(),
                                 "Test Teacher account created with username 'teacher' and password 'teacher'. Please change it immediately after login.");
+        }
+
+        /**
+         * Tạo mặc định 10 tài khoản học sinh student1 ~ student10
+         */
+        public void createDefaultStudentsIfNotExists() {
+                for (int i = 1; i <= 10; i++) {
+                        String username = "student" + i;
+                        String fullName = "Student " + i;
+                        String email = "student" + i + "@gmail.com";
+                        String password = "student";
+                        String logMessage = "Student account created with username '" + username + "' and password '"
+                                        + password +
+                                        "'. Please change it immediately after login.";
+
+                        createDefaultAccountIfNotExists(username, fullName, email, password,
+                                        RoleConstant.STUDENT.name(), logMessage);
+                }
         }
 
         /** BLOCKS */
@@ -234,19 +249,125 @@ public class DefaultDataServiceImpl implements DefaultDataService {
 
         @Override
         public void createDefaultMajors() {
-                // Ngành thuộc KHTN
-                createMajorIfNotExists("CNTT", "Công Nghệ Thông Tin", "Ngành học về phần mềm, dữ liệu, AI", "KHTN");
-                createMajorIfNotExists("DTDDT", "Điện Tử - Viễn Thông", "Điện tử, truyền thông, tín hiệu", "KHTN");
-                createMajorIfNotExists("KTDL", "Kỹ Thuật Dữ Liệu", "Phân tích dữ liệu và big data", "KHTN");
-                createMajorIfNotExists("KTPM", "Kỹ Thuật Phần Mềm", "Thiết kế và phát triển phần mềm", "KHTN");
-                createMajorIfNotExists("KHL", "Khoa Học Máy Tính", "Lý thuyết và ứng dụng tính toán", "KHTN");
+                // Nhóm ngành Công Nghệ Thông Tin
+                createMajorIfNotExists(
+                                "CNTT",
+                                "Nhóm ngành Công Nghệ Thông Tin",
+                                "Nhóm ngành Công Nghệ Thông Tin bao gồm các lĩnh vực như lập trình, phát triển phần mềm, kỹ thuật phần mềm, "
+                                                +
+                                                "cơ sở dữ liệu, trí tuệ nhân tạo, dữ liệu lớn, mạng máy tính và an ninh mạng. Sinh viên học ngành này sẽ được đào tạo "
+                                                +
+                                                "từ lý thuyết cơ bản đến ứng dụng thực tiễn, phát triển tư duy logic, kỹ năng giải quyết vấn đề, sáng tạo trong nghiên cứu "
+                                                +
+                                                "và ứng dụng công nghệ hiện đại, đáp ứng nhu cầu ngành CNTT trong kỷ nguyên số.",
+                                "KHTN");
 
-                // Ngành thuộc KHXH
-                createMajorIfNotExists("QTKD", "Quản Trị Kinh Doanh", "Quản lý và điều hành doanh nghiệp", "KHXH");
-                createMajorIfNotExists("LUAT", "Luật", "Ngành luật pháp và pháp lý", "KHXH");
-                createMajorIfNotExists("DLH", "Du Lịch - Hướng Dẫn", "Du lịch, khách sạn, hướng dẫn viên", "KHXH");
-                createMajorIfNotExists("TAMT", "Tâm Lý Học", "Nghiên cứu tâm lý con người", "KHXH");
-                createMajorIfNotExists("GDH", "Giáo Dục Học", "Sư phạm và nghiên cứu giáo dục", "KHXH");
+                // Nhóm ngành Điện – Điện tử – Viễn thông
+                createMajorIfNotExists(
+                                "DIENTU",
+                                "Nhóm ngành Điện – Điện tử – Viễn Thông",
+                                "Nhóm ngành này bao gồm các lĩnh vực kỹ thuật điện, điện tử, viễn thông, tự động hóa, robot, "
+                                                +
+                                                "và hệ thống nhúng. Sinh viên sẽ học về thiết kế, vận hành, bảo trì và tối ưu hóa các hệ thống điện tử "
+                                                +
+                                                "và truyền thông, đồng thời phát triển kỹ năng nghiên cứu, phân tích, giải quyết vấn đề, áp dụng công nghệ hiện đại "
+                                                +
+                                                "vào các ngành công nghiệp và viễn thông.",
+                                "KHTN");
+
+                // Nhóm ngành Cơ khí – Tự động hóa
+                createMajorIfNotExists(
+                                "COMEKI",
+                                "Nhóm ngành Cơ Khí – Tự Động Hóa",
+                                "Nhóm ngành này tập trung vào cơ khí, chế tạo máy, cơ điện tử, tự động hóa và robot. " +
+                                                "Sinh viên được đào tạo về thiết kế, vận hành, bảo trì, cải tiến và tối ưu hóa hệ thống máy móc công nghiệp, "
+                                                +
+                                                "kỹ năng phân tích kỹ thuật, tư duy logic và sáng tạo, đáp ứng nhu cầu phát triển công nghiệp 4.0.",
+                                "KHTN");
+
+                // Nhóm ngành Y Dược – Sức khỏe
+                createMajorIfNotExists(
+                                "YDUOC",
+                                "Nhóm ngành Y Dược – Sức Khỏe",
+                                "Nhóm ngành Y Dược bao gồm y học, dược học, điều dưỡng, y tế cộng đồng, nha khoa và các ngành liên quan. "
+                                                +
+                                                "Sinh viên sẽ học cách chăm sóc sức khỏe, chẩn đoán và điều trị bệnh, nghiên cứu khoa học y học, "
+                                                +
+                                                "áp dụng công nghệ y sinh, phát triển kỹ năng giao tiếp, quản lý và tư duy phản biện trong môi trường y tế hiện đại.",
+                                "KHTN");
+
+                // Nhóm ngành Kinh tế – Quản lý
+                createMajorIfNotExists(
+                                "KINHDOANH",
+                                "Nhóm ngành Kinh Tế – Quản Lý",
+                                "Nhóm ngành Kinh Tế – Quản Lý bao gồm quản trị kinh doanh, tài chính – ngân hàng, kế toán, marketing, logistics, quản lý nhân sự và các ngành liên quan. "
+                                                +
+                                                "Sinh viên được đào tạo kiến thức về quản lý doanh nghiệp, phân tích thị trường, lập kế hoạch chiến lược, kỹ năng lãnh đạo, giao tiếp và ra quyết định trong môi trường kinh tế toàn cầu.",
+                                "KHXH");
+
+                // Nhóm ngành Luật – Chính trị – Quan hệ quốc tế
+                createMajorIfNotExists(
+                                "LUAT",
+                                "Nhóm ngành Luật – Chính trị – Quan Hệ Quốc Tế",
+                                "Nhóm ngành này bao gồm luật, chính trị học, quan hệ quốc tế, ngoại giao, và các ngành xã hội liên quan. "
+                                                +
+                                                "Sinh viên sẽ học cách nghiên cứu pháp luật, phân tích chính sách, quản lý xã hội, giao tiếp, đàm phán, "
+                                                +
+                                                "tư duy phản biện và giải quyết các vấn đề phức tạp trong bối cảnh trong nước và quốc tế.",
+                                "KHXH");
+
+                // Nhóm ngành Giáo dục – Tâm lý – Xã hội
+                createMajorIfNotExists(
+                                "GD_TAMLY",
+                                "Nhóm ngành Giáo Dục – Tâm Lý – Xã Hội",
+                                "Nhóm ngành này bao gồm giáo dục học, tâm lý học, xã hội học, sư phạm, và các lĩnh vực nghiên cứu con người. "
+                                                +
+                                                "Sinh viên sẽ học cách giảng dạy, nghiên cứu hành vi, phát triển con người, xây dựng chương trình giáo dục, "
+                                                +
+                                                "tư vấn tâm lý và giải quyết các vấn đề xã hội, phát triển kỹ năng giao tiếp, lãnh đạo và quản lý trong môi trường xã hội đa dạng.",
+                                "KHXH");
+
+                // Nhóm ngành Nghệ thuật – Truyền thông
+                createMajorIfNotExists(
+                                "NGHE_THUAT",
+                                "Nhóm ngành Nghệ Thuật – Truyền Thông",
+                                "Nhóm ngành này bao gồm mỹ thuật, thiết kế đồ họa, âm nhạc, điện ảnh, truyền thông, báo chí, quảng cáo và các ngành sáng tạo khác. "
+                                                +
+                                                "Sinh viên sẽ được đào tạo kỹ năng sáng tạo, tư duy thẩm mỹ, kỹ năng truyền thông, sản xuất nội dung, quản lý dự án sáng tạo và phát triển nghề nghiệp trong các lĩnh vực nghệ thuật và truyền thông.",
+                                "KHXH");
+
+                // Nhóm ngành Du lịch – Nhà hàng – Khách sạn
+                createMajorIfNotExists(
+                                "DL_NHKS",
+                                "Nhóm ngành Du Lịch – Nhà Hàng – Khách Sạn",
+                                "Nhóm ngành này bao gồm du lịch, quản lý khách sạn, quản lý nhà hàng, hướng dẫn du lịch và các dịch vụ liên quan. "
+                                                +
+                                                "Sinh viên sẽ được trang bị kiến thức về quản lý dịch vụ, kỹ năng giao tiếp, tổ chức sự kiện, marketing du lịch, "
+                                                +
+                                                "phát triển kỹ năng phục vụ khách hàng và khả năng sáng tạo trong việc xây dựng trải nghiệm du lịch và dịch vụ chất lượng cao.",
+                                "KHXH");
+
+                // Nhóm ngành Nông – Lâm – Ngư nghiệp
+                createMajorIfNotExists(
+                                "NONG_LAM_NGU",
+                                "Nhóm ngành Nông – Lâm – Ngư nghiệp",
+                                "Nhóm ngành này bao gồm nông học, lâm nghiệp, thủy sản, quản lý tài nguyên và môi trường. "
+                                                +
+                                                "Sinh viên sẽ học về sản xuất, bảo vệ và phát triển tài nguyên nông – lâm – ngư, nghiên cứu sinh thái, quản lý môi trường, "
+                                                +
+                                                "áp dụng khoa học kỹ thuật và công nghệ mới vào sản xuất bền vững, đồng thời phát triển kỹ năng nghiên cứu và giải quyết vấn đề thực tiễn.",
+                                "KHTN");
+
+                // Nhóm ngành Khoa học cơ bản – Toán – Vật lý – Hóa học
+                createMajorIfNotExists(
+                                "KHCB",
+                                "Nhóm ngành Khoa Học Cơ Bản – Toán – Vật Lý – Hóa Học",
+                                "Nhóm ngành này bao gồm toán học, vật lý, hóa học, thống kê, khoa học vật liệu và các ngành nghiên cứu cơ bản khác. "
+                                                +
+                                                "Sinh viên sẽ được trang bị kiến thức lý thuyết nền tảng, kỹ năng phân tích, nghiên cứu khoa học, tư duy logic, "
+                                                +
+                                                "giải quyết vấn đề và áp dụng kiến thức vào các ngành kỹ thuật, công nghệ và nghiên cứu ứng dụng.",
+                                "KHTN");
         }
 
         /** ==================== QUESTIONS ==================== */
@@ -402,6 +523,68 @@ public class DefaultDataServiceImpl implements DefaultDataService {
                 DEFAULT_QUESTIONS.forEach(this::createQuestionIfNotExists);
         }
 
+        /** ==================== TEST RESULTS ==================== */
+        @Override
+        public void createDefaultTestResults() {
+                Random random = new Random();
+
+                for (long userId = 2; userId <= 13; userId++) {
+                        int resultCount = 2 + random.nextInt(2); // 2-3 kết quả mỗi user
+
+                        for (int i = 0; i < resultCount; i++) {
+                                try {
+                                        Map<String, Integer> answersMap = new HashMap<>();
+
+                                        // Sections A, C, E, I, R, S (1-8)
+                                        String[] sections = { "A", "C", "E", "I", "R", "S" };
+                                        for (String sec : sections) {
+                                                for (int j = 1; j <= 8; j++) {
+                                                        answersMap.put(sec + j, random.nextInt(5) + 1);
+                                                }
+                                        }
+
+                                        // TIPI 1-10
+                                        for (int j = 1; j <= 10; j++) {
+                                                answersMap.put("TIPI" + j, random.nextInt(5) + 1);
+                                        }
+
+                                        // urban & gender
+                                        answersMap.put("urban", random.nextInt(3) + 1);
+                                        answersMap.put("gender", random.nextInt(2) + 1);
+
+                                        // Chuyển map sang JSON
+                                        ObjectMapper objectMapper = new ObjectMapper();
+                                        String answersJson = objectMapper.writeValueAsString(answersMap);
+
+                                        // Chọn ngẫu nhiên predictedMajor
+                                        String[] majorGroups = {
+                                                        "Khối Khoa Học Tự Nhiên",
+                                                        "Khối Khoa Học Xã Hội"
+                                        };
+                                        String predictedMajor = majorGroups[random.nextInt(majorGroups.length)];
+
+                                        // createdAt rải trong 30 ngày gần đây
+                                        LocalDateTime createdAt = LocalDateTime.now()
+                                                        .minus(random.nextInt(30), ChronoUnit.DAYS)
+                                                        .minus(random.nextInt(24), ChronoUnit.HOURS)
+                                                        .minus(random.nextInt(60), ChronoUnit.MINUTES);
+
+                                        // Build và save TestResult
+                                        TestResult result = TestResult.builder()
+                                                        .userId(userId)
+                                                        .answers(answersJson)
+                                                        .predictedMajor(predictedMajor)
+                                                        .createdAt(createdAt)
+                                                        .build();
+
+                                        testResultRepository.save(result);
+                                } catch (Exception e) {
+                                        e.printStackTrace();
+                                }
+                        }
+                }
+        }
+
         /** ==================== UTILS ==================== */
         private Role getRoleOrThrow(String roleName) {
                 return roleRepository.findById(roleName)
@@ -418,7 +601,8 @@ public class DefaultDataServiceImpl implements DefaultDataService {
                 createDefaultMajors();
                 createDefaultQuestions();
                 createAdminAccountIfNotExists();
-                createTestUserAccountIfNotExists();
                 createTestTeacherAccountIfNotExists();
+                createDefaultStudentsIfNotExists();
+                // createDefaultTestResults();
         }
 }

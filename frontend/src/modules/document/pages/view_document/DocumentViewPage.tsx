@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Button, Spin } from "antd";
+import { Button, Spin, Typography } from "antd";
 import styles from "./DocumentViewPage.module.scss";
 import { DocumentManagerService } from "../../../teacher/document/services/DocumentManagerService";
 import type { DocumentResponse } from "../../../teacher/document/interfaces/DocumentManagerInterface";
@@ -41,6 +41,15 @@ const DocumentViewPage: React.FC = () => {
             <div className={styles.header}>
                 <Button onClick={() => navigate(-1)}>⬅ Quay lại</Button>
                 <h2>{document.title}</h2>
+            </div>
+            <div className="styles.details">
+                <Typography.Paragraph><strong>Tác giả:</strong> {document.updatedBy || "Không xác định"}</Typography.Paragraph>
+                <Typography.Paragraph><strong>Ngày đăng:</strong> {document.updatedAt ? new Date(document.updatedAt).toLocaleDateString() : "Không xác định"}</Typography.Paragraph>
+                {document.description && (
+                    <Typography.Paragraph>
+                        <strong>Mô tả:</strong> {document.description}
+                    </Typography.Paragraph>
+                )}
             </div>
             <div className={styles.viewer}>
                 <iframe
