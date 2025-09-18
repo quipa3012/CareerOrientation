@@ -14,7 +14,7 @@ Administrators can manage users, majors, classes, and generate statistical repor
 
 ---
 
-## 🛠️ Công nghệ sử dụng (Technologies Used)
+## Công nghệ sử dụng (Technologies Used)
 
 - **Frontend:** ReactJS (TypeScript), Redux Toolkit, Ant Design  
 - **Backend:** Spring Boot (Java), RESTful API, OAuth2 Resource Server, JWT Authentication  
