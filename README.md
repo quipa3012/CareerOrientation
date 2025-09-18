@@ -48,27 +48,36 @@ Administrators can manage users, majors, classes, and generate statistical repor
 ---
 
 ## Cấu trúc dự án (Project Structure)
-careerconnect/
+CareerOrientation/
 │── backend/ # Spring Boot RESTful API
 │── frontend/ # ReactJS (TypeScript)
 │── module-AI/ # Service AI Predict (Python)
 └── README.md
 
-## Cài đặt (Installation)
-1. Clone repo:  
-   ```bash
-   git clone https://github.com/quipa3012/CareerOrientation.git
-   cd CareerOrientation
 
-2. Frontend:
-  cd frontend
-  npm install
-  npm run dev
+## ⚙️ Cài đặt (Installation)
 
-3. Backend:
-  cd backend
-  .\mvnw.cmd spring-boot:run
-   
-5. AI-Service:
-  cd .\module-AI\Ai-service
-  python AI_predict.py
+```bash
+# 1. Clone repo
+git clone https://github.com/quipa3012/CareerOrientation.git
+cd CareerOrientation
+
+# 2. Frontend
+cd frontend
+npm install
+npm run dev
+
+# 3. Backend
+cd backend
+.\mvnw.cmd spring-boot:run   # Windows
+./mvnw spring-boot:run       # Linux/Mac
+
+# 4. AI-Service
+cd module-AI/Ai-service
+python -m venv .venv         # (chỉ cần làm lần đầu)
+.\.venv\Scripts\activate     # Windows
+source .venv/bin/activate    # Linux/Mac
+
+pip install -r requirements.txt
+python AI_predict.py
+
