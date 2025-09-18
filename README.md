@@ -48,12 +48,13 @@ Administrators can manage users, majors, classes, and generate statistical repor
 ---
 
 ## Cấu trúc dự án (Project Structure)
+```
 CareerOrientation/
 │── backend/ # Spring Boot RESTful API
 │── frontend/ # ReactJS (TypeScript)
 │── module-AI/ # Service AI Predict (Python)
 └── README.md
-
+```
 
 ## ⚙️ Cài đặt (Installation)
 
