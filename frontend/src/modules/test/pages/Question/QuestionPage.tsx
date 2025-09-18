@@ -132,7 +132,7 @@ const QuestionPage: React.FC = () => {
 
     return (
         <Card
-            title="Bài Test Định Hướng Nghề Nghiệp"
+            title="Bài Test Định Hướng Khối Học Phù Hợp"
             className={styles.card}
         >
             <Progress
